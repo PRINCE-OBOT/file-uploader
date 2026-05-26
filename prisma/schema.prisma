@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  folders Folder[]
+  files   File[]
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // owner
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // self referential
+  parentId String?
+  parent   Folder?  @relation("FolderTree", fields: [parentId], references: [id])
+  children Folder[] @relation("FolderTree")
+
+  // contents
+  files File[]
+
+  // share links
+  sharedLinks SharedFolder[]
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  url       String   // cloudinary URL or local path
+  mimetype  String   // e.g "image/png", "application/pdf"
+  size      Int      // in bytes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // owner
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // which folder it lives in
+  folderId String
+  folder   Folder @relation(fields: [folderId], references: [id])
+}
+
+model SharedFolder {
+  id        String   @id @default(cuid())
+  expiresAt DateTime                          // when the link stops working
+  createdAt DateTime @default(now())
+
+  folderId String
+  folder   Folder @relation(fields: [folderId], references: [id])
+}
+
+// required by prisma-session-store for Passport.js sessions
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
