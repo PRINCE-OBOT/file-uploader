@@ -1,5 +1,5 @@
 const { Router } = require("express");
-// const homePageController = require("../controllers/home-page-controller");
+const homePageController = require("../controllers/home-page-controller");
 const signup = require("../controllers/sign-up-controller");
 const loginController = require("../controllers/log-in-controller");
 // const logoutController = require("../controllers/log-out-controller");
@@ -22,7 +22,7 @@ router.post("/sign-up", signup.postController);
 
 // Routes to run after authentication
 
-// router.get("/", homePageController);
+router.get("/", homePageController);
 
 // router.get("/message", addMessageController);
 

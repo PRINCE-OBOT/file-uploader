@@ -11,6 +11,7 @@
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "connect-flash": "^0.1.1",
+    "date-fns": "^4.3.0",
     "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
@@ -21,6 +22,6 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pg": "^8.21.0",
-    "prisma": "^7.8.0"
+    "prisma": "^6.19.3"
   }
 }

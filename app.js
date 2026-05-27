@@ -65,11 +65,15 @@ function passportAuthController(req, res, next) {
     if (err) return next(err);
 
     if (!user) {
-      return res.status(404).render("index", {
-        pageTemplate: "login",
-        title: "Log in",
+      return res.status(404).json({
+        message: "Login page",
         error: info.message
       });
+      // return res.status(404).render("index", {
+      //   pageTemplate: "login",
+      //   title: "Log in",
+      //   error: info.message
+      // });
     }
 
     req.logIn(user, (err) => {
@@ -95,7 +99,6 @@ app.use(errorController);
 // }
 
 // main()
-
 
 if (require.main === module) {
   app.listen(PORT, (error) => {
