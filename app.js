@@ -10,7 +10,6 @@ const methodOverride = require("method-override");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 
 const router = require("./routes/index");
-const pool = require("./db/pool");
 
 const loginController = require("./controllers/log-in-controller");
 const errorController = require("./controllers/error-controller");
@@ -88,6 +87,15 @@ app.use((req, res) => {
 });
 
 app.use(errorController);
+
+// prisma script
+// async function main() {
+//   const user = await prisma.user.findMany();
+//   console.log(user);
+// }
+
+// main()
+
 
 if (require.main === module) {
   app.listen(PORT, (error) => {
