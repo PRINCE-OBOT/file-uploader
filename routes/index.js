@@ -6,6 +6,8 @@ const logoutController = require("../controllers/log-out-controller");
 
 const isAuthenticatedController = require("../controllers/is-authenticated-controller");
 const folderController = require("../controllers/folder-controller");
+const fileController = require("../controllers/file-controller");
+const share = require("../controllers/share-controller");
 
 const router = Router();
 
@@ -17,6 +19,9 @@ router.get("/sign-up", signup.getController);
 
 router.post("/sign-up", signup.postController);
 
+router.get("/share/:folderId", share.getController);
+
+router.post("/share", share.postController);
 // Authentication
 
 router.use(isAuthenticatedController);
@@ -25,19 +30,13 @@ router.use(isAuthenticatedController);
 
 router.get("/", homePageController);
 
-// router.get("/message", addMessageController);
-
-// router.get("/join-club", joinClubController);
-
 router.get("/log-out", logoutController);
 
 // post routes
 
 router.post("/folder", folderController);
 
-// router.post("/join-club/member", memberPasscodeController);
-
-// router.post("/join-club/admin", adminPasscodeController);
+router.post("/file", fileController);
 
 // delete router
 

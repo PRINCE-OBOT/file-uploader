@@ -97,15 +97,8 @@ async function main() {
   //   const user = await prisma.user.findMany()
   //   console.log(user);
 
-  const folder = await prisma.folder.findUnique({
-    where: {
-      id: "cmpoe7tyi0000qgvnucji4423"
-    },
-    include: {
-      children: true
-    }
-  });
-  console.log(folder);
+  const folder = await prisma.sharedFolder.findMany();
+  // console.log(folder);
 }
 
 main();

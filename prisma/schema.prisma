@@ -50,24 +50,24 @@ model Folder {
 model File {
   id        String   @id @default(cuid())
   name      String
-  url       String   // cloudinary URL or local path
-  mimetype  String   // e.g "image/png", "application/pdf"
-  size      Int      // in bytes
+  url       String // cloudinary URL or local path
+  mimetype  String // e.g "image/png", "application/pdf"
+  size      Int // in bytes
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // owner
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
 
   // which folder it lives in
-  folderId String
-  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId String?
+  folder   Folder? @relation(fields: [folderId], references: [id])
 }
 
 model SharedFolder {
   id        String   @id @default(cuid())
-  expiresAt DateTime                          // when the link stops working
+  expiresAt DateTime // when the link stops working
   createdAt DateTime @default(now())
 
   folderId String
