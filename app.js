@@ -93,12 +93,22 @@ app.use((req, res) => {
 app.use(errorController);
 
 // prisma script
-// async function main() {
-//   const user = await prisma.user.findMany();
-//   console.log(user);
-// }
+async function main() {
+  //   const user = await prisma.user.findMany()
+  //   console.log(user);
 
-// main()
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: "cmpoe7tyi0000qgvnucji4423"
+    },
+    include: {
+      children: true
+    }
+  });
+  console.log(folder);
+}
+
+main();
 
 if (require.main === module) {
   app.listen(PORT, (error) => {
@@ -108,5 +118,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-
-// Use a short time to test the session that it has expired

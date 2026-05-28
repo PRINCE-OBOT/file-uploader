@@ -5,7 +5,7 @@ const homePageController = async (req, res) => {
 
   res.json({
     message: "You are log in",
-    user
+    // user
   });
 
   // res.render("index", {
