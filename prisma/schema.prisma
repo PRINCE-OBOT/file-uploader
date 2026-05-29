@@ -44,6 +44,7 @@ model Folder {
   files File[]
 
   // share links
+  sharedFolderId  String?
   sharedLinks SharedFolder[]
 }
 
@@ -59,6 +60,8 @@ model File {
   // owner
   userId String
   user   User  @relation(fields: [userId], references: [id])
+
+  sharedFolderId  String?
 
   // which folder it lives in
   folderId String?

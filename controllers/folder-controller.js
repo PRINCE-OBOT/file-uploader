@@ -14,7 +14,7 @@ const validateFolder = [
     .withMessage(`${folderNameErr} not contain ^</\:*">`)
 ];
 
-const folderController = [
+const postController = [
   validateFolder,
   async (req, res) => {
     const errors = validationResult(req);
@@ -29,7 +29,7 @@ const folderController = [
     const userId = req.user.id;
     const parentId = req.body.parentId;
     const { name } = matchedData(req);
-0
+
     await prisma.folder.create({
       data: {
         name,
@@ -43,4 +43,48 @@ const folderController = [
   }
 ];
 
-module.exports = folderController;
+const getController = async (req, res) => {
+  // click on folder,
+  // get the id of the folder from params
+  const folderId = req.params.folderId;
+
+  // get the folder
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: folderId
+    },
+    include: {
+      children: true,
+      files: true
+    }
+  });
+
+  // pass it children down
+  res.json({ folder });
+
+  // check if folder has shareFolderId
+  // if it has update the children and files to have the shareFolderId
+  const sharedFolderId = folder.sharedFolderId;
+
+  if (sharedFolderId) {
+    await prisma.folder.update({
+      where: { id: sharedFolderId },
+      data: {
+        children: {
+          updateMany: {
+            where: {},
+            data: { sharedFolderId }
+          }
+        },
+        files: {
+          updateMany: {
+            where: {},
+            data: { sharedFolderId }
+          }
+        }
+      }
+    });
+  }
+};
+
+module.exports = { getController, postController };

@@ -1,22 +1,21 @@
 const express = require("express");
-const { join } = require("path");
-
-const passport = require("passport");
-const bcrypt = require("bcryptjs");
 const session = require("express-session");
 
+const { join } = require("path");
+const bcrypt = require("bcryptjs");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
-const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 
 const router = require("./routes/index");
 
 const loginController = require("./controllers/log-in-controller");
 const errorController = require("./controllers/error-controller");
 
+const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-
 const passportConfig = require("./config/passport-config");
+
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { prisma } = require("./lib/prisma");
 
 const app = express();
@@ -94,10 +93,10 @@ app.use(errorController);
 
 // prisma script
 async function main() {
-  //   const user = await prisma.user.findMany()
-  //   console.log(user);
+  // const folder = await prisma.sharedFolder.findMany({
+  //   where: {}
+  // });
 
-  const folder = await prisma.sharedFolder.findMany();
   // console.log(folder);
 }
 
