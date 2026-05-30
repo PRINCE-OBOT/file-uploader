@@ -41,8 +41,12 @@ router.post("/file", fileController);
 
 router.post("/share", share.postController);
 
-// delete router
+// update routes
 
-// router.delete("/message/:id", deleteMessageController);
+router.put('/folder', folder.updateController)
+
+// delete routes
+
+router.delete("/folder", folder.deleteController);
 
 module.exports = router;

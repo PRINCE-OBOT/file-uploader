@@ -22,14 +22,12 @@ const postController = async (req, res) => {
 
 const folderNames = [];
 
-const getFolderNamesRec = async (folder) => {
+const pushFolderNamesRec = async (folder) => {
   if (!folder) return;
 
   folderNames.push(folder.name);
 
-  console.log(folder.name);
   if (folder.id === folder.sharedFolderId) return;
-  console.log("running");
 
   const folderObj = await prisma.folder.findUnique({
     where: {
@@ -40,7 +38,7 @@ const getFolderNamesRec = async (folder) => {
     }
   });
 
-  getFolderNamesRec(folderObj.parent);
+  pushFolderNamesRec(folderObj.parent);
 };
 
 const getController = async (req, res) => {
@@ -84,11 +82,11 @@ const getController = async (req, res) => {
   if (file) {
     folderNames.push(file.name);
 
-    await getFolderNamesRec(file.folder);
+    await pushFolderNamesRec(file.folder);
     res.json({ file, folderNames });
   } else {
     // otherwise, get the name of the it parent recursively, it children and the parent folder
-    await getFolderNamesRec(folder);
+    await pushFolderNamesRec(folder);
     res.json({ folder, folderNames });
   }
 

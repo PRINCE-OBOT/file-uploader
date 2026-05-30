@@ -93,11 +93,11 @@ app.use(errorController);
 
 // prisma script
 async function main() {
-  // const folder = await prisma.sharedFolder.findMany({
-  //   where: {}
-  // });
+  const folder = await prisma.folder.findMany({
+    where: {}
+  });
 
-  // console.log(folder);
+  console.log(folder);
 }
 
 main();

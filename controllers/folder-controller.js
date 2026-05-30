@@ -87,4 +87,48 @@ const getController = async (req, res) => {
   }
 };
 
-module.exports = { getController, postController };
+const updateController = [
+  validateFolder,
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
+
+    const folderId = req.body.folderId;
+    const { name } = matchedData(req);
+
+    await prisma.folder.update({
+      where: { id: folderId },
+      data: {
+        name
+      }
+    });
+
+    res.json({ mes: "Folder updated successfully" });
+  }
+];
+
+const deleteController = async (req, res) => { 
+  const folderId = req.body.folderId;  
+
+  await prisma.folder.delete({
+    where: {
+      id: folderId
+    }
+  });
+ 
+  res.json({
+    message: "Folder deleted successfully"
+  });
+};
+
+module.exports = {
+  getController,
+  postController,
+  updateController,
+  deleteController
+};
