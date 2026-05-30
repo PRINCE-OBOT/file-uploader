@@ -41,7 +41,7 @@ const separateValidFilesFromInvalid = (file) => {
   }
 };
 
-const validateFileName = [
+const validatedFileName = [
   body("name")
     .trim()
     .notEmpty()
@@ -53,7 +53,6 @@ const validateFileName = [
 ];
 
 const validatedFile = [
-  ...validateFileName,
   check("files").custom((value, { req }) => {
     if (!req.files || req.files.length === 0) {
       throw new Error("Files are required");
@@ -110,6 +109,9 @@ const postController = [
         if (err) console.error("Failed to delete invalid file:", err);
       });
     });
+
+    validFiles.splice(0)
+    invalidFiles.splice(0)
   }
 ];
 
@@ -124,7 +126,7 @@ const getController = async (req, res) => {
 };
 
 const updateController = [
-  validateFileName,
+  validatedFileName,
   async (req, res) => {
     const errors = validationResult(req);
 
