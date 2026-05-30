@@ -91,6 +91,26 @@ const getController = async (req, res) => {
   }
 
   folderNames.splice(0);
+
+  if (folder) {
+    await prisma.folder.update({
+      where: { id: sharedFolderId },
+      data: {
+        children: {
+          updateMany: {
+            where: {},
+            data: { sharedFolderId }
+          }
+        },
+        files: {
+          updateMany: {
+            where: {},
+            data: { sharedFolderId }
+          }
+        }
+      }
+    });
+  }
 };
 
 module.exports = { getController, postController };

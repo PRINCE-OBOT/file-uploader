@@ -2,8 +2,6 @@ const bcrypt = require("bcryptjs");
 const { prisma } = require("../lib/prisma");
 const LocalStrategy = require("passport-local").Strategy;
 
-const failLoginMsg = "Incorrect email or password";
-
 const localStrategy = () => {
   // run when user login
   return new LocalStrategy(
@@ -17,11 +15,11 @@ const localStrategy = () => {
         });
 
         if (!user) {
-          return done(null, false, { message: failLoginMsg });
+          return done(null, false);
         }
 
         const match = await bcrypt.compare(password, user.password);
-        if (!match) return done(null, false, { message: failLoginMsg });
+        if (!match) return done(null, false);
 
         return done(null, user); // call serializeUser
       } catch (err) {

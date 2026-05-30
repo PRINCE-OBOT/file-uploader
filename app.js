@@ -17,6 +17,8 @@ const passportConfig = require("./config/passport-config");
 
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { prisma } = require("./lib/prisma");
+const setAuth = require("./controllers/set-auth-controller");
+const setLoginError = require("./controllers/set-login-error-controller");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,13 +45,24 @@ app.use(
 
 app.use(passport.session());
 
+app.use(setAuth);
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use(flash());
 
+app.use(setLoginError);
+
 app.use(methodOverride("_method"));
 
-app.post("/log-in", passportAuthController);
+app.post(
+  "/log-in",
+  passport.authenticate("local", {
+    successRedirect: "/homepage",
+    failureRedirect: "/log-in",
+    failureFlash: "Incorrect email or password"
+  })
+);
 
 app.use("/", router);
 
@@ -58,30 +71,6 @@ passport.use(passportConfig.localStrategy());
 passport.serializeUser(passportConfig.serializeUser);
 
 passport.deserializeUser(passportConfig.deserializeUser);
-
-function passportAuthController(req, res, next) {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) return next(err);
-
-    if (!user) {
-      return res.status(404).json({
-        message: "Login page",
-        error: info.message
-      });
-      // return res.status(404).render("index", {
-      //   pageTemplate: "login",
-      //   title: "Log in",
-      //   error: info.message
-      // });
-    }
-
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-
-      return res.redirect("/");
-    });
-  })(req, res, next);
-}
 
 app.use((req, res) => {
   res.status(404).json({
@@ -97,7 +86,7 @@ async function main() {
     where: {}
   });
 
-  console.log(folder);
+  // console.log(folder);
 }
 
 main();

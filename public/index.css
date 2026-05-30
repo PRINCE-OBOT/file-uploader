@@ -1,0 +1,408 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 5. Improve media defaults */
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 7. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/* font */
+@font-face {
+  font-family: Roboto;
+  src:
+    url(./assets/fonts/Roboto-400.woff) format(woff),
+    url(./assets/fonts/Roboto-400.woff2) format(woff2);
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Pacifico;
+  src:
+    url(./assets/fonts/Pacifico-Regular.woff) format(woff),
+    url(./assets/fonts/Pacifico-Regular.woff2) format(woff2);
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+
+:root {
+  --text: #5b5166;
+  --text-h: #333;
+  --pri-accent: rgb(96, 86, 8);
+  --sec-accent: rgb(188, 188, 164);
+  --white: rgb(255, 255, 255);
+  --black: rgb(0, 0, 0);
+  --grey: rgb(212, 207, 207);
+  --error-transparent: rgba(249, 12, 12, 0.2);
+  --error: rgba(249, 12, 12);
+
+  --transparent-white-xsm: rgba(255, 255, 255, 0.8);
+  --transparent-white-sm: rgba(255, 255, 255, 0.5);
+  --transparent-white-lg: rgba(255, 255, 255, 0.2);
+
+  --transparent-black-xsm: rgba(0, 0, 0, 0.8);
+  --transparent-black-sm: rgba(0, 0, 0, 0.5);
+  --transparent-black-lg: rgba(0, 0, 0, 0.2);
+
+  --sz-xxxsm: 1px;
+  --sz-xxsm: 2px;
+  --sz-xsm: 5px;
+  --sz-sm: 10px;
+  --sz-lg: 20px;
+  --sz-xlg: 30px;
+  --sz-xxlg: 60px;
+
+  --bx-shadow: 0.5px 0.5px 5px var(--transparent-black-lg);
+}
+
+body {
+  font-family: Roboto, arial;
+  font-size: 0.9rem;
+  color: var(--black);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 50px;
+  width: min(90%, 1300px);
+  padding: 20px 0;
+  margin: 0 auto 0;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  border-radius: 5px;
+  box-shadow: var(--bx-shadow);
+  padding: 10px;
+  background-color: var(--transparent-black-xsm);
+
+  a {
+    color: white;
+  }
+}
+
+.logo a {
+  font-family: Pacifico, cursive;
+  background: linear-gradient(70deg, white 70%, var(--pri-accent)) text;
+  color: transparent;
+}
+
+.logo_icon {
+  height: 25px;
+}
+
+nav {
+  display: flex;
+  column-gap: 20px;
+}
+
+nav > a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon {
+  height: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a,
+button {
+  transition: 300ms;
+
+  &:hover {
+    scale: 0.98;
+  }
+  &:active {
+    scale: 0.96;
+  }
+}
+
+/* form */
+.form_wrap,
+.passcode_form {
+  padding-top: 60px;
+  width: min(90%, 450px);
+  margin: 0 auto 0;
+  box-shadow: var(--bx-shadow);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.passcode_form_admin {
+  margin-top: 50px;
+}
+
+.form_wrap,
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+form,
+.input_wrap {
+  width: 100%;
+}
+
+.input_wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+label,
+input {
+  font-size: 1rem;
+}
+
+input {
+  width: 100%;
+  height: 40px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 2px solid var(--pri-accent);
+}
+
+.submit_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 30px;
+  border-radius: 5px;
+  background-color: var(--pri-accent);
+  color: var(--white);
+  border: 2px solid var(--sec-accent);
+}
+
+.ques_wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+}
+
+.sign_up,
+.log_in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  color: var(--pri-accent);
+}
+
+.error_wrap {
+  background-color: rgb(227, 124, 124, 0.5);
+  padding: 9px;
+  border-radius: 10px;
+
+  li {
+    list-style: none;
+    color: rgb(69, 8, 8);
+    text-align: center;
+  }
+}
+
+.messages {
+  display: grid;
+  row-gap: 10px;
+}
+
+.profile{
+  text-align: right;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 9px 10px;
+  border-radius: 10px;
+  text-transform: capitalize;
+  border-left: 2px solid var(--transparent-black-sm);
+  border-bottom: 2px solid var(--transparent-black-sm);
+}
+
+.message_header {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid var(--transparent-black-lg);
+}
+
+.privacy_icon_wrap {
+  height: 40px;
+}
+
+.logout_wrap {
+  justify-self: right;
+  color: var(--sec-accent);
+  background: var(--pri-accent);
+  height: fit-content;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.privacy_icon_wrap {
+  padding: 8px;
+  border-radius: 10px;
+  border: 2px solid var(--transparent-white-xsm);
+  background-color: var(--transparent-black-sm);
+}
+
+.message_heading_wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.add_msg_wrap {
+  display: flex;
+  column-gap: 5px;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--white);
+  background-color: var(--pri-accent);
+}
+
+.messages_wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: 20px;
+  padding: 30px 10px;
+  border-radius: 10px;
+  background: var(--transparent-black-lg);
+}
+
+.message {
+  list-style: none;
+  width: min(100%, 460px);
+  border-radius: 20px;
+  border: 1px solid var(--transparent-black-xsm);
+  box-shadow: var(--bx-shadow);
+  padding: 20px;
+  background: var(--transparent-black-lg);
+}
+
+.text {
+  opacity: 0.8;
+}
+
+hr {
+  margin: 15px 0;
+}
+
+.from,
+.createdat,
+.delete {
+  display: flex;
+  column-gap: 5px;
+}
+
+.from_text,
+.createdat_text,
+.message_icon {
+  opacity: 0.7;
+}
+
+.message_icon {
+  height: 20px;
+  width: 20px;
+}
+
+.delete_form {
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+  justify-content: flex-end;
+}
+
+.delete {
+  background-color: rgb(53, 9, 9);
+  padding: 5px 10px;
+  border-radius: 10px;
+  justify-content: center;
+  color: rgb(228, 118, 118);
+}
+
+.hint {
+  background: var(--sec-accent);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.message_text {
+  padding: 10px;
+  height: 200px;
+  resize: none;
+  border: 2px solid var(--pri-accent);
+  border-radius: 5px;
+}

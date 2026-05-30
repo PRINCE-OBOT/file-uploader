@@ -35,6 +35,9 @@ router.get("/folder/:folderId", folder.getController);
 
 router.get("/file/:fileId", file.getController);
 
+router.get("/log-out", logoutController);
+
+
 // post routes
 
 router.post("/folder", folder.postController);
@@ -55,4 +58,4 @@ router.delete("/folder", folder.deleteController);
 
 router.delete("/file", file.deleteController);
 
-module.exports = router; 
+module.exports = router;

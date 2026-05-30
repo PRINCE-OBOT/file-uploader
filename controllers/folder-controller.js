@@ -57,28 +57,6 @@ const getController = async (req, res) => {
   });
 
   res.json({ folder });
-
-  const sharedFolderId = folder.sharedFolderId;
-
-  if (sharedFolderId) {
-    await prisma.folder.update({
-      where: { id: sharedFolderId },
-      data: {
-        children: {
-          updateMany: {
-            where: {},
-            data: { sharedFolderId }
-          }
-        },
-        files: {
-          updateMany: {
-            where: {},
-            data: { sharedFolderId }
-          }
-        }
-      }
-    });
-  }
 };
 
 const updateController = [

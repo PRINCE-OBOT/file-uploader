@@ -1,5 +1,5 @@
 const loginController = (req, res) => {
-  res.json({ message: "Login page" });
+  res.render("index", { title: "Log-in", pageTemplate: "login" });
   // ("index", { title: "Log-in", pageTemplate: "login" });
 };
 

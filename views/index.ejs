@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <title><%= locals.title %></title>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <section class="logo">
+          <a href="/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="logo_icon"
+              fill="#BCBCA4"
+            >
+              <path
+                d="M3 6C3 4.9 3.9 4 5 4H9L11 6H19C20.1 6 21 6.9 21 8V18C21 19.1 20.1 20 19 20H5C3.9 20 3 19.1 3 18V6Z"
+              />
+            </svg>
+            Drive
+          </a>
+        </section>
+        <nav>
+          <a href="/" class="home_wrap">
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 10.5L12 3l9 7.5" />
+              <path d="M5 9.5V20h14V9.5" />
+              <path d="M10 20v-6h4v6" />
+            </svg>
+            Home
+          </a>
+
+          <% if(isAuthenticated){ %>
+            <%- include('logout') %>
+          <% } %>
+        </nav>
+      </header>
+
+      <%- include(pageTemplate) %>
+    </div>
+  </body>
+</html>
