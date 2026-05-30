@@ -55,14 +55,15 @@ app.use(setLoginError);
 
 app.use(methodOverride("_method"));
 
-app.post(
-  "/log-in",
+app.post("/log-in", (req, res, next) => {
+  req.flash("email", req.body.email);
+
   passport.authenticate("local", {
     successRedirect: "/homepage",
     failureRedirect: "/log-in",
     failureFlash: "Incorrect email or password"
-  })
-);
+  })(req, res, next);
+});
 
 app.use("/", router);
 

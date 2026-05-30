@@ -25,7 +25,6 @@ const validateSignUp = [
 
   body("confirmPassword").custom((value, { req }) => {
     if (value !== req.body.password) {
-      console.log(req.body.password, value);
       throw new Error("Passwords do not match");
     }
     return true;
@@ -47,7 +46,9 @@ const postController = [
     });
 
     if (user) {
-      return res.status(401).json({
+      return res.status(401).render("index", {
+        title: "Sign Up",
+        pageTemplate: "sign-up",
         errors: [{ msg: "Email already exist" }],
         firstName,
         lastName,
@@ -55,20 +56,12 @@ const postController = [
         password,
         confirmPassword
       });
-      // return res.status(401).render("index", {
-      //   title: "Sign Up",
-      //   pageTemplate: "sign-up",
-      //   errors: [{ msg: "Email already exist" }],
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   password,
-      //   confirmPassword
-      // });
     }
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({
+      return res.status(400).render("index", {
+        title: "Sign Up",
+        pageTemplate: "sign-up",
         errors: errors.array(),
         firstName,
         lastName,
@@ -76,16 +69,6 @@ const postController = [
         password,
         confirmPassword
       });
-      // return res.status(400).render("index", {
-      //   title: "Sign Up",
-      //   pageTemplate: "sign-up",
-      //   errors: errors.array(),
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   password,
-      //   confirmPassword
-      // });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -99,13 +82,11 @@ const postController = [
     });
 
     res.redirect("/log-in");
-    // res.render("index", { title: "Log in", pageTemplate: "login" });
   }
 ];
 
 const getController = (req, res) => {
-  res.json({ message: "Sign up page" });
-  // res.render("index", { title: "Sign Up", pageTemplate: "sign-up" });
+  res.render("index", { title: "Sign Up", pageTemplate: "sign-up" });
 };
 
 module.exports = { getController, postController };

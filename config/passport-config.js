@@ -19,7 +19,8 @@ const localStrategy = () => {
         }
 
         const match = await bcrypt.compare(password, user.password);
-        if (!match) return done(null, false);
+        if (!match)
+          return done(null, false);
 
         return done(null, user); // call serializeUser
       } catch (err) {
