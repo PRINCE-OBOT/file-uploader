@@ -1,6 +1,11 @@
 const multer = require("multer");
 const fs = require("fs");
-const { validationResult, matchedData, check } = require("express-validator");
+const {
+  validationResult,
+  matchedData,
+  check,
+  body
+} = require("express-validator");
 const { prisma } = require("../lib/prisma");
 
 const storage = multer.diskStorage({
@@ -16,8 +21,9 @@ const upload = multer({ storage });
 
 const invalidFiles = [];
 const validFiles = [];
+const fileNameErr = "File name must";
 
-const separateFiles = (file) => {
+const separateValidFilesFromInvalid = (file) => {
   const { size, mimetype } = file;
 
   const limits = {
@@ -35,13 +41,25 @@ const separateFiles = (file) => {
   }
 };
 
+const validateFileName = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage(`${fileNameErr} not be empty`)
+    .isLength({ min: 1, max: 20 })
+    .withMessage(`${fileNameErr} be between 1 and 20 characters`)
+    .matches(/^[^<>\\\/:*"]+$/)
+    .withMessage(`${fileNameErr} not contain ^</\:*">`)
+];
+
 const validatedFile = [
+  ...validateFileName,
   check("files").custom((value, { req }) => {
     if (!req.files || req.files.length === 0) {
       throw new Error("Files are required");
     }
 
-    req.files.forEach(separateFiles);
+    req.files.forEach(separateValidFilesFromInvalid);
 
     if (invalidFiles.length > 0) {
       throw new Error(
@@ -53,7 +71,7 @@ const validatedFile = [
   })
 ];
 
-const fileController = [
+const postController = [
   upload.array("files", 10),
   validatedFile,
   async (req, res) => {
@@ -66,12 +84,8 @@ const fileController = [
       });
     }
 
-    // Your UI form should have a folderId where the file will be saved under, it will be sent anonymously
     const userId = req.user.id;
     const folderId = req.body.folderId || null;
-
-    // Problem Encounter
-    // Do providing `folderId` directly no longer supported again, that I have to use `folder` to connect explicitly
 
     await Promise.all(
       validFiles.map((file) =>
@@ -99,4 +113,58 @@ const fileController = [
   }
 ];
 
-module.exports = fileController;
+const getController = async (req, res) => {
+  const fileId = req.params.fileId;
+
+  const file = await prisma.file.findUnique({
+    where: { id: fileId }
+  });
+
+  res.json({ file });
+};
+
+const updateController = [
+  validateFileName,
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
+
+    const fileId = req.body.fileId;
+    const { name } = matchedData(req);
+
+    await prisma.file.update({
+      where: { id: fileId },
+      data: {
+        name
+      }
+    });
+
+    res.json({ mes: "File updated successfully" });
+  }
+];
+
+const deleteController = async (req, res) => {
+  const fileId = req.body.fileId;
+
+  await prisma.file.delete({
+    where: {
+      id: fileId
+    }
+  });
+
+  res.json({
+    message: "Folder deleted successfully"
+  });
+};
+
+module.exports = {
+  postController,
+  getController,
+  updateController,
+  deleteController
+};

@@ -6,7 +6,7 @@ const logoutController = require("../controllers/log-out-controller");
 
 const isAuthenticatedController = require("../controllers/is-authenticated-controller");
 const folder = require("../controllers/folder-controller");
-const fileController = require("../controllers/file-controller");
+const file = require("../controllers/file-controller");
 const share = require("../controllers/share-controller");
 
 const router = Router();
@@ -33,20 +33,26 @@ router.get("/log-out", logoutController);
 
 router.get("/folder/:folderId", folder.getController);
 
+router.get("/file/:fileId", file.getController);
+
 // post routes
 
 router.post("/folder", folder.postController);
 
-router.post("/file", fileController);
+router.post("/file", file.postController);
 
 router.post("/share", share.postController);
 
 // update routes
 
-router.put('/folder', folder.updateController)
+router.put("/folder", folder.updateController);
+
+router.put("/file", file.updateController);
 
 // delete routes
 
 router.delete("/folder", folder.deleteController);
 
-module.exports = router;
+router.delete("/file", file.deleteController);
+
+module.exports = router; 

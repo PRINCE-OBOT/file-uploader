@@ -44,11 +44,8 @@ const postController = [
 ];
 
 const getController = async (req, res) => {
-  // click on folder,
-  // get the id of the folder from params
   const folderId = req.params.folderId;
 
-  // get the folder
   const folder = await prisma.folder.findUnique({
     where: {
       id: folderId
@@ -59,11 +56,8 @@ const getController = async (req, res) => {
     }
   });
 
-  // pass it children down
   res.json({ folder });
 
-  // check if folder has shareFolderId
-  // if it has update the children and files to have the shareFolderId
   const sharedFolderId = folder.sharedFolderId;
 
   if (sharedFolderId) {
@@ -112,15 +106,15 @@ const updateController = [
   }
 ];
 
-const deleteController = async (req, res) => { 
-  const folderId = req.body.folderId;  
+const deleteController = async (req, res) => {
+  const folderId = req.body.folderId;
 
   await prisma.folder.delete({
     where: {
       id: folderId
     }
   });
- 
+
   res.json({
     message: "Folder deleted successfully"
   });
