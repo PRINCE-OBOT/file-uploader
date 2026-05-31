@@ -39,18 +39,21 @@
 </section>
 
 <dialog class="file_dialog">
-  <form action="">
-    <button id="uploadBtn">Upload</button>
-
-    <div id="fileList"></div>
+  <form action="" class="file_form">
+    <button type="button" class="close_file_dialog act">X</button>
+    <div class="fileList"></div>
+    <button class="uploadBtn act" type="button">Upload</button>
   </form>
 </dialog>
 
 <script>
   const fileDialog = document.querySelector(".file_dialog");
   const createFileInput = document.querySelector(".createFileInput");
-  const fileList = document.getElementById("fileList");
-  const uploadBtn = document.getElementById("uploadBtn");
+  const fileList = document.querySelector(".fileList");
+  const uploadBtn = document.querySelector(".uploadBtn");
+  const closeFileDialog = document.querySelector(".close_file_dialog");
+
+  const selectedFiles = [];
 
   const rootFolderAndFileWrap = document.querySelector(
     ".root_folder_and_file_wrap"
@@ -61,10 +64,15 @@
     rootFolderAndFileWrap.prepend();
   }
 
-  let selectedFiles = [];
-  function handleCreateFile() {
+  function handleCloseFileDialog() {
+    fileDialog.close();
+    selectedFiles.splice(0);
+    fileList.innerHTML = "";
+  }
+
+  function handleCreateFile(e) {
     fileDialog.showModal();
-    selectedFiles = Array.from(e.target.files);
+    selectedFiles.push(...Array.from(e.target.files));
 
     renderFiles();
   }
@@ -77,7 +85,7 @@
 
       fileWrap.innerHTML = `
           <p>Original: ${file.name}</p>
-          <input type="text" value="${file.name}" data-index="${index}" />
+          <label for="rename-file-${index}">Rename:</label><input type="text" id="rename-file-${index}" value="${file.name}" data-index="${index}" />
           <hr/>
         `;
 
@@ -86,7 +94,7 @@
   }
 
   function handleUploadFile() {
-    const inputs = fileListDiv.querySelectorAll("input");
+    const inputs = fileList.querySelectorAll("input");
 
     const formData = new FormData();
 
@@ -105,6 +113,7 @@
       .then((res) => res.text())
       .then((data) => {
         console.log("Upload success:", data);
+        selectedFiles.splice(0);
       })
       .catch((err) => {
         console.error("Upload error:", err);
@@ -113,6 +122,7 @@
 
   uploadBtn.addEventListener("click", handleUploadFile);
   createFileInput.addEventListener("change", handleCreateFile);
+  closeFileDialog.addEventListener("click", handleCloseFileDialog);
 
   createFolder.addEventListener("click", handleCreateFolder);
 </script>

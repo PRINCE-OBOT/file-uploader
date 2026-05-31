@@ -285,12 +285,13 @@ input {
   padding-top: 10px;
 }
 
-.create_file, .create_folder{
+.create_file,
+.create_folder {
   display: flex;
   align-items: center;
 }
 
-.create_file{
+.create_file {
   position: relative;
 }
 
@@ -299,13 +300,53 @@ input {
   width: 30px;
 }
 
-
-hr{
+hr {
   margin-top: 20px;
 }
 
-.createFileInput{
+.createFileInput {
   opacity: 0;
   position: absolute;
   inset: 0;
+}
+
+/* file dialog */
+.file_dialog {
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border: none;
+  padding: 0;
+  border-radius: 10px;
+
+  &::backdrop {
+    background-color: var(--transparent-black-xsm);
+    backdrop-filter: blur(3px);
+  }
+}
+
+.file_form {
+  position: relative;
+  padding: 40px 30px 30px 30px;
+  border-radius: 10px;
+  box-shadow: var(--bx-shadow);
+}
+
+.close_file_dialog {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.uploadBtn {
+  background: var(--pri-accent);
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: none;
+  color: var(--white);
+  box-shadow: var(--bx-shadow);
 }
