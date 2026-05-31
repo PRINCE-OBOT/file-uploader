@@ -46,13 +46,15 @@
   </form>
 </dialog>
 
-<script>
+<script type="module">
+  import { fetchGet } from "/utils/helpers.js";
+
   const fileDialog = document.querySelector(".file_dialog");
   const createFileInput = document.querySelector(".createFileInput");
   const fileList = document.querySelector(".fileList");
   const uploadBtn = document.querySelector(".uploadBtn");
   const closeFileDialog = document.querySelector(".close_file_dialog");
-
+  0;
   const selectedFiles = [];
 
   const rootFolderAndFileWrap = document.querySelector(
@@ -74,10 +76,10 @@
     fileDialog.showModal();
     selectedFiles.push(...Array.from(e.target.files));
 
-    renderFiles();
+    renderSelectedFiles();
   }
 
-  function renderFiles() {
+  function renderSelectedFiles() {
     fileList.innerHTML = "";
 
     selectedFiles.forEach((file, index) => {
@@ -114,11 +116,63 @@
       .then((data) => {
         console.log("Upload success:", data);
         selectedFiles.splice(0);
+        renderFoldersAndFile();
       })
       .catch((err) => {
         console.error("Upload error:", err);
       });
   }
+
+  async function renderFiles() {
+    const files = await fetchGet("/file");
+
+    files.forEach((file) => {
+      const fileWrap = document.createElement("div");
+      const fileName = document.createElement("div");
+
+      fileWrap.classList.add("file_wrap");
+      fileName.classList.add("file_name");
+
+      fileName.textContent = file.name;
+
+      fileWrap.setAttribute("data-file-id", `${file.id}`);
+
+      fileWrap.append(fileName);
+      rootFolderAndFileWrap.append(fileWrap);
+    });
+  }
+
+  async function renderFolders() {
+    const folders = await fetchGet("/folder");
+
+    folders.forEach((folder) => {
+      const folderWrap = document.createElement("div");
+      const folderName = document.createElement("div");
+      const folderRightArrow = document.createElement("div");
+
+      folderWrap.classList.add("folder_wrap");
+      folderName.classList.add("folder_name");
+      folderRightArrow.classList.add("folder_right_arrow");
+
+      folderRightArrow.textContent = ">";
+      folderName.textContent = folder.name;
+
+      folderWrap.setAttribute("data-folder-id", `${folder.id}`);
+
+      folderWrap.append(folderRightArrow, folderName);
+
+      rootFolderAndFileWrap.innerHTML = "";
+      rootFolderAndFileWrap.append(folderWrap);
+    });
+  }
+
+  function renderFoldersAndFile() {
+    renderFolders().then(() => {
+      renderFiles();
+    });
+  }
+
+  renderFoldersAndFile();
 
   uploadBtn.addEventListener("click", handleUploadFile);
   createFileInput.addEventListener("change", handleCreateFile);

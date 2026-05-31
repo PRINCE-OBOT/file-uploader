@@ -33,10 +33,13 @@ router.get("/log-out", logoutController);
 
 router.get("/folder/:folderId", folder.getController);
 
+router.get("/folder", folder.getAllController);
+
 router.get("/file/:fileId", file.getController);
 
-router.get("/log-out", logoutController);
+router.get("/file", file.getAllController);
 
+router.get("/log-out", logoutController);
 
 // post routes
 

@@ -110,8 +110,8 @@ const postController = [
       });
     });
 
-    validFiles.splice(0)
-    invalidFiles.splice(0)
+    validFiles.splice(0);
+    invalidFiles.splice(0);
   }
 ];
 
@@ -123,6 +123,12 @@ const getController = async (req, res) => {
   });
 
   res.json({ file });
+};
+
+const getAllController = async (req, res) => {
+  const files = await prisma.file.findMany({});
+
+  return res.json(files);
 };
 
 const updateController = [
@@ -167,6 +173,7 @@ const deleteController = async (req, res) => {
 module.exports = {
   postController,
   getController,
+  getAllController,
   updateController,
   deleteController
 };

@@ -43,6 +43,12 @@ const postController = [
   }
 ];
 
+const getAllController = async (req, res) => {
+  const folders = await prisma.folder.findMany({});
+
+  return res.json(folders);
+};
+
 const getController = async (req, res) => {
   const folderId = req.params.folderId;
 
@@ -100,6 +106,7 @@ const deleteController = async (req, res) => {
 
 module.exports = {
   getController,
+  getAllController,
   postController,
   updateController,
   deleteController
