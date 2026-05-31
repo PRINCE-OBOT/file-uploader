@@ -206,8 +206,8 @@
 
   function handleFolderAndFileOpen(e) {
     const folderWrap = e.target.closest("[data-folder-id]");
-
-    if (folderWrap) {
+    
+    if (folderWrap && !folderWrap.open) {
       displayFolder(e, folderWrap);
     }
   }
