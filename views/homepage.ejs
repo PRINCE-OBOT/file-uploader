@@ -35,7 +35,10 @@
 
   <hr />
 
-  <div class="root_folder_and_file_wrap"></div>
+  <main>
+    <div class="root_folder_and_file_wrap"></div>
+    <div class="file_display_wrap"></div>
+  </main>
 </section>
 
 <dialog class="file_dialog">
@@ -108,6 +111,8 @@
       formData.append("files", renamedFile);
     });
 
+    fileDialog.close();
+
     fetch("/file", {
       method: "POST",
       body: formData
@@ -171,7 +176,6 @@
       folderName.classList.add("folder_name");
       subFolderAndFileWrap.classList.add("sub_folder_and_file_wrap");
 
-
       folderName.textContent = folder.name;
 
       folderWrap.setAttribute("data-folder-id", `${folder.id}`);
@@ -206,7 +210,7 @@
 
   function handleFolderAndFileOpen(e) {
     const folderWrap = e.target.closest("[data-folder-id]");
-    
+
     if (folderWrap && !folderWrap.open) {
       displayFolder(e, folderWrap);
     }

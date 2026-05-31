@@ -353,6 +353,16 @@ hr {
 
 /* file dialog end */
 
+main{
+  display: flex;
+  height: 90vh;
+}
+
+.file_display_wrap{
+  flex: 1;
+  
+}
+
 /* folder wrap  */
 
 .root_folder_and_file_wrap {
@@ -360,6 +370,12 @@ hr {
   display: flex;
   flex-direction: column;
   row-gap: 10px;
+  box-shadow: var(--bx-shadow);
+  background: var(--transparent-black-lg);
+  padding: 20px;
+  
+  max-width: 260px;
+  overflow: auto;
 }
 
 .folder_wrap {
