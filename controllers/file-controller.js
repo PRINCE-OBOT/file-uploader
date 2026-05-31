@@ -126,7 +126,9 @@ const getController = async (req, res) => {
 };
 
 const getAllController = async (req, res) => {
-  const files = await prisma.file.findMany({});
+  const files = await prisma.file.findMany({
+    where: { folderId: null }
+  });
 
   return res.json(files);
 };

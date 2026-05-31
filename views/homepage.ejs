@@ -116,16 +116,30 @@
       .then((data) => {
         console.log("Upload success:", data);
         selectedFiles.splice(0);
-        renderFoldersAndFile();
+        renderFoldersAndFiles();
       })
       .catch((err) => {
         console.error("Upload error:", err);
       });
   }
 
-  async function renderFiles() {
+  async function getFiles() {
     const files = await fetchGet("/file");
+    appendFiles(files, rootFolderAndFileWrap);
+  }
 
+  async function getFolders() {
+    const folders = await fetchGet("/folder");
+    appendFolders(folders, rootFolderAndFileWrap);
+  }
+
+  function renderFoldersAndFiles() {
+    getFolders().then(() => {
+      getFiles();
+    });
+  }
+
+  function appendFiles(files, fileAndFolderWrap) {
     files.forEach((file) => {
       const fileWrap = document.createElement("div");
       const fileName = document.createElement("div");
@@ -138,45 +152,73 @@
       fileWrap.setAttribute("data-file-id", `${file.id}`);
 
       fileWrap.append(fileName);
-      rootFolderAndFileWrap.append(fileWrap);
+      fileAndFolderWrap.append(fileWrap);
     });
   }
 
-  async function renderFolders() {
-    const folders = await fetchGet("/folder");
+  function appendFolders(folders, fileAndFolderWrap) {
+    fileAndFolderWrap.innerHTML = "";
 
     folders.forEach((folder) => {
-      const folderWrap = document.createElement("div");
-      const folderName = document.createElement("div");
-      const folderRightArrow = document.createElement("div");
+      const folderWrap = document.createElement("details");
+      const folderNameWrap = document.createElement("summary");
+      const folderName = document.createElement("span");
+
+      const subFolderAndFileWrap = document.createElement("div");
 
       folderWrap.classList.add("folder_wrap");
+      folderNameWrap.classList.add("folder_name_wrap");
       folderName.classList.add("folder_name");
-      folderRightArrow.classList.add("folder_right_arrow");
+      subFolderAndFileWrap.classList.add("sub_folder_and_file_wrap");
 
-      folderRightArrow.textContent = ">";
+
       folderName.textContent = folder.name;
 
       folderWrap.setAttribute("data-folder-id", `${folder.id}`);
+      folderWrap.setAttribute("tabindex", "0");
+      folderNameWrap.append(folderName);
+      folderWrap.append(folderNameWrap, subFolderAndFileWrap);
 
-      folderWrap.append(folderRightArrow, folderName);
-
-      rootFolderAndFileWrap.innerHTML = "";
-      rootFolderAndFileWrap.append(folderWrap);
+      fileAndFolderWrap.append(folderWrap);
     });
   }
 
-  function renderFoldersAndFile() {
-    renderFolders().then(() => {
-      renderFiles();
-    });
+  function displayFile(subFiles, subFolderAndFileWrap) {
+    appendFiles(subFiles, subFolderAndFileWrap);
   }
 
-  renderFoldersAndFile();
+  async function displayFolder(e, folderWrap) {
+    const folderId = folderWrap.getAttribute("data-folder-id");
+    const subFolderAndFileWrap = folderWrap.querySelector(
+      ".sub_folder_and_file_wrap"
+    );
+
+    const folder = await fetchGet(`/folder/${folderId}`);
+
+    const subFolders = folder.children || [];
+    const subFiles = folder.files || [];
+
+    subFolderAndFileWrap.innerHTML = "";
+
+    appendFolders(subFolders, subFolderAndFileWrap);
+    displayFile(subFiles, subFolderAndFileWrap);
+  }
+
+  function handleFolderAndFileOpen(e) {
+    const folderWrap = e.target.closest("[data-folder-id]");
+
+    if (folderWrap) {
+      displayFolder(e, folderWrap);
+    }
+  }
+
+  renderFoldersAndFiles();
 
   uploadBtn.addEventListener("click", handleUploadFile);
   createFileInput.addEventListener("change", handleCreateFile);
   closeFileDialog.addEventListener("click", handleCloseFileDialog);
 
   createFolder.addEventListener("click", handleCreateFolder);
+
+  rootFolderAndFileWrap.addEventListener("click", handleFolderAndFileOpen);
 </script>

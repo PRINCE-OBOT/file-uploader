@@ -87,7 +87,7 @@ async function main() {
     where: {}
   });
 
-  // console.log(folder);
+  console.log(folder);
 }
 
 main();

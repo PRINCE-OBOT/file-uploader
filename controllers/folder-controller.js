@@ -44,7 +44,9 @@ const postController = [
 ];
 
 const getAllController = async (req, res) => {
-  const folders = await prisma.folder.findMany({});
+  const folders = await prisma.folder.findMany({
+    where: { parentId: null }
+  });
 
   return res.json(folders);
 };
@@ -62,7 +64,7 @@ const getController = async (req, res) => {
     }
   });
 
-  res.json({ folder });
+  return res.json(folder);
 };
 
 const updateController = [

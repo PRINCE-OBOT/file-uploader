@@ -297,7 +297,7 @@ input {
 
 .create_folder_icon,
 .file_icon {
-  width: 30px;
+  width: 22px;
 }
 
 hr {
@@ -353,7 +353,6 @@ hr {
 
 /* file dialog end */
 
-
 /* folder wrap  */
 
 .root_folder_and_file_wrap {
@@ -364,19 +363,20 @@ hr {
 }
 
 .folder_wrap {
-  display: flex;
-  align-items: center;
+  padding-top: 10px;
 }
 
-.folder_right_arrow {
-  color: var(--transparent-black-sm);
-  width: 15px;
+.folder_name {
+  padding-left: 0px;
 }
 
+.sub_folder_and_file_wrap {
+  padding-left: 20px;
+}
 /* folder wrap end */
 
 /* file wrap  */
 
-.file_wrap{
-  padding-left: 15px;
+.file_wrap {
+  padding: var(--sz-xsm) 0 0 15px;
 }
