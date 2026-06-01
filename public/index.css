@@ -354,7 +354,7 @@ hr {
 
 main {
   display: flex;
-  height: 90vh;
+  min-height: 90vh;
 }
 
 .file_display_wrap {
@@ -391,6 +391,17 @@ main {
 
 .file_display_wrap_content {
   padding: 20px;
+}
+
+.file_empty{
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty_icon{
+  height: 400px;
 }
 
 .file_display_heading {

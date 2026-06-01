@@ -59,6 +59,6 @@ router.put("/file/:fileId", file.updateController);
 
 router.delete("/folder", folder.deleteController);
 
-router.delete("/file", file.deleteController);
+router.delete("/file/:fileId", file.deleteController);
 
 module.exports = router;

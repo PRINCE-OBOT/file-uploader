@@ -132,7 +132,7 @@ const getAllController = async (req, res) => {
 
 const updateController = [
   validatedFileName,
-  
+
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -153,12 +153,12 @@ const updateController = [
       }
     });
 
-    res.json({ ok: true });
+    return res.json({ ok: true });
   }
 ];
 
 const deleteController = async (req, res) => {
-  const fileId = req.body.fileId;
+  const fileId = req.params.fileId;
 
   await prisma.file.delete({
     where: {
@@ -166,9 +166,7 @@ const deleteController = async (req, res) => {
     }
   });
 
-  res.json({
-    message: "Folder deleted successfully"
-  });
+  return res.json({ ok: true });
 };
 
 module.exports = {
