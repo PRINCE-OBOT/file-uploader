@@ -1,3 +1,4 @@
+const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const {
@@ -169,10 +170,36 @@ const deleteController = async (req, res) => {
   return res.json({ ok: true });
 };
 
+const downloadController = async (req, res) => {
+  // dev
+  const file = await prisma.file.findUnique({
+    where: { id: req.params.fileId }
+  });
+  const dirArr = __dirname.split("/");
+  const dir = dirArr.slice(0, dirArr.length - 1).join("/");
+  
+  const filePath = path.join(dir, "public/files/", file.name);
+  res.download(filePath, file.originalName); // 2nd arg = name shown to user
+
+  //  production -- uncomment this for production
+
+  // const file = await prisma.file.findUnique({
+  //   where: { id: req.params.fileId }
+  // });
+
+  // const response = await fetch(file.url);
+  // const buffer = await response.arrayBuffer();
+
+  // res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+  // res.setHeader("Content-Type", file.mimeType);
+  // res.send(Buffer.from(buffer));
+};
+
 module.exports = {
   postController,
   getController,
   getAllController,
   updateController,
+  downloadController,
   deleteController
 };

@@ -39,6 +39,8 @@ router.get("/file/:fileId", file.getController);
 
 router.get("/file", file.getAllController);
 
+router.get("/file/:fileId/download", file.downloadController);
+
 router.get("/log-out", logoutController);
 
 // post routes

@@ -415,6 +415,10 @@ main {
   column-gap: 20px;
 }
 
+.download_icon_wrap{
+  color: var(--black);
+}
+
 .inp_file_name{
   max-width: 300px;
 }

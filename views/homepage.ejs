@@ -212,9 +212,24 @@
             points="362.06 702.184 125.274 702.184 125.274 700.481 360.356 700.481 360.356 617.861 145.18 617.861 134.727 596.084 136.263 595.347 146.252 616.157 362.06 616.157 362.06 702.184"
             fill="rgba(0, 0, 0, 0.8)"
           />
-          <circle cx="156.78851" cy="726.03301" r="17.88673" fill="rgba(0, 0, 0, 0.8)" />
-          <circle cx="333.10053" cy="726.03301" r="17.88673" fill="rgba(0, 0, 0, 0.8)" />
-          <circle cx="540.92726" cy="346.153" r="11.07274" fill="rgba(0, 0, 0, 0.8)" />
+          <circle
+            cx="156.78851"
+            cy="726.03301"
+            r="17.88673"
+            fill="rgba(0, 0, 0, 0.8)"
+          />
+          <circle
+            cx="333.10053"
+            cy="726.03301"
+            r="17.88673"
+            fill="rgba(0, 0, 0, 0.8)"
+          />
+          <circle
+            cx="540.92726"
+            cy="346.153"
+            r="11.07274"
+            fill="rgba(0, 0, 0, 0.8)"
+          />
           <path
             d="M539.38538,665.76747H273.23673L215.64844,477.531H598.69256l-.34852,1.10753Zm-264.8885-1.7035H538.136l58.23417-184.82951H217.95082Z"
             transform="translate(-152 -76.01429)"
@@ -451,7 +466,7 @@
           <input type="text" class="inp_file_name hide" />
 
           <div class="file_display_action_wrap">
-            <div class="download_icon_wrap act" data-file-action="download">
+            <a class="download_icon_wrap act">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -464,7 +479,7 @@
                 <path d="M7 10l5 5 5-5" />
                 <path d="M5 21h14" />
               </svg>
-            </div>
+            </a>
 
             <div class="rename_icon_wrap act" data-file-action="rename">
               <svg
@@ -551,6 +566,9 @@
 
   const fileAction = fileDisplayWrapContent.querySelector(
     ".file_display_action_wrap"
+  );
+  const fileDownload = fileDisplayWrapContent.querySelector(
+    ".download_icon_wrap"
   );
 
   // file data
@@ -722,6 +740,8 @@
     const fileId = fileWrap.getAttribute("data-file-id");
 
     const file = await fetchGet(`/file/${fileId}`);
+
+    fileDownload.href = `file/${file.id}/download`;
 
     fileDisplayWrapContent.classList.remove("hide");
     fileEmpty.classList.add("hide");
