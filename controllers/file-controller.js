@@ -7,10 +7,11 @@ const {
   body
 } = require("express-validator");
 const { prisma } = require("../lib/prisma");
+const { format } = require("date-fns");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "files/");
+    cb(null, "public/files/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -42,14 +43,7 @@ const separateValidFilesFromInvalid = (file) => {
 };
 
 const validatedFileName = [
-  body("name")
-    .trim()
-    .notEmpty()
-    .withMessage(`${fileNameErr} not be empty`)
-    .isLength({ min: 1, max: 20 })
-    .withMessage(`${fileNameErr} be between 1 and 20 characters`)
-    .matches(/^[^<>\\\/:*"]+$/)
-    .withMessage(`${fileNameErr} not contain ^</\:*">`)
+  body("name").trim().notEmpty().withMessage(`${fileNameErr} not be empty`)
 ];
 
 const validatedFile = [
@@ -122,7 +116,10 @@ const getController = async (req, res) => {
     where: { id: fileId }
   });
 
-  res.json({ file });
+  file.createdAt = format(file.createdAt, "EEE dd, MMMM, yyyy");
+  file.updatedAt = format(file.updatedAt, "EEE dd, MMMM, yyyy");
+
+  return res.json(file);
 };
 
 const getAllController = async (req, res) => {
@@ -135,6 +132,7 @@ const getAllController = async (req, res) => {
 
 const updateController = [
   validatedFileName,
+  
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -144,7 +142,8 @@ const updateController = [
       });
     }
 
-    const fileId = req.body.fileId;
+    const fileId = req.params.fileId;
+
     const { name } = matchedData(req);
 
     await prisma.file.update({
@@ -154,7 +153,7 @@ const updateController = [
       }
     });
 
-    res.json({ mes: "File updated successfully" });
+    res.json({ ok: true });
   }
 ];
 

@@ -7,3 +7,6 @@ export async function fetchGet(routes) {
   }
 }
 
+export const getValidUrl = (url) => {
+  return `/${url.split("/").slice(1).join('/')}`;
+};

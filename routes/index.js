@@ -53,7 +53,7 @@ router.post("/share", share.postController);
 
 router.put("/folder", folder.updateController);
 
-router.put("/file", file.updateController);
+router.put("/file/:fileId", file.updateController);
 
 // delete routes
 
