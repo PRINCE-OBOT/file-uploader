@@ -547,7 +547,7 @@
 </dialog>
 
 <script type="module">
-  import { fetchGet, getValidUrl } from "/utils/helpers.js";
+  import { fetchGet, fetchPost, getValidUrl } from "/utils/helpers.js";
 
   const fileDialog = document.querySelector(".file_dialog");
   const createFileInput = document.querySelector(".createFileInput");
@@ -593,8 +593,33 @@
   );
   const createFolder = document.querySelector(".create_folder");
 
+  // click edit
+  // replace the space with input
+  // get the text from folder name
+  // focus outside
+  // if is it empty replace it with the previous name
+  // send that name with the id to the database, for update after that
+  // reload the page
+
+  function createNewFolder(e) {
+    const folderName = e.target.value;
+
+    const isEmpty = !folderName.trim();
+
+    if (isEmpty) return;
+
+    const params = new URLSearchParams();
+    params.append("name", folderName);
+
+    fetchPost(params, renderFoldersAndFiles);
+  }
+
   function handleCreateFolder(e) {
-    rootFolderAndFileWrap.prepend();
+    const inpFolderName = document.createElement("input");
+
+    inpFolderName.addEventListener("change", createNewFolder);
+
+    rootFolderAndFileWrap.prepend(inpFolderName);
   }
 
   function handleCloseFileDialog() {
@@ -658,12 +683,12 @@
 
   async function getFiles() {
     const files = await fetchGet("/file");
-    appendFiles(files, rootFolderAndFileWrap);
+    appendFiles(files.reverse(), rootFolderAndFileWrap);
   }
 
   async function getFolders() {
     const folders = await fetchGet("/folder");
-    appendFolders(folders, rootFolderAndFileWrap);
+    appendFolders(folders.reverse(), rootFolderAndFileWrap);
   }
 
   function renderFoldersAndFiles() {
@@ -745,6 +770,8 @@
 
     fileDisplayWrapContent.classList.remove("hide");
     fileEmpty.classList.add("hide");
+    inpFileName.classList.add("hide");
+    fileName.classList.remove("hide");
 
     fileDisplayWrapContent.setAttribute("data-file-id", `${file.id}`);
     filePreview.src = getValidUrl(file.url);
@@ -796,10 +823,6 @@
       });
   }
 
-  // pass the id for deletion
-  // after successful deletion
-  // make file previewer hiden and show to empty one
-  // reload the side bar
   const fileActionObj = {
     rename: () => {
       const input = fileDisplayWrapContent.querySelector(".inp_file_name");
