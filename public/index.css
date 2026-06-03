@@ -193,8 +193,7 @@ button {
   margin-top: 50px;
 }
 
-.form_wrap,
-form {
+.form_wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -278,6 +277,10 @@ input {
   }
 }
 
+.cursor {
+  cursor: pointer;
+}
+
 .create_folder_and_file_wrap {
   display: flex;
   align-items: center;
@@ -311,10 +314,8 @@ hr {
 }
 
 /* file dialog */
-.file_dialog {
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
+.file_dialog,
+.modify_folder_dialog {
   border: none;
   padding: 0;
   border-radius: 10px;
@@ -322,6 +323,12 @@ hr {
   &::backdrop {
     backdrop-filter: blur(3px);
   }
+}
+
+.file_dialog {
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
 }
 
 .file_form {
@@ -352,9 +359,40 @@ hr {
 
 /* file dialog end */
 
+/* modify folder dialog */
+
+.modify_folder_dialog {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.modify_folder_form {
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.modify_folder_form > button {
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  &:nth-child(1n + 2) {
+    border-top: 1px solid var(--transparent-black-lg);
+    padding-top: 6px;
+  }
+}
+
+.delete_folder{
+  color: var(--error);
+  font-weight: 800;
+}
+
 main {
   display: flex;
   min-height: 90vh;
+  position: relative;
 }
 
 .file_display_wrap {
@@ -393,14 +431,14 @@ main {
   padding: 20px;
 }
 
-.file_empty{
+.file_empty {
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.empty_icon{
+.empty_icon {
   height: 400px;
 }
 
@@ -415,15 +453,15 @@ main {
   column-gap: 20px;
 }
 
-.download_icon_wrap{
+.download_icon_wrap {
   color: var(--black);
 }
 
-.inp_file_name{
+.inp_file_name {
   max-width: 300px;
 }
 
-.file_display_action_wrap svg{
+.file_display_action_wrap svg {
   pointer-events: none;
 }
 /* file wrap  */

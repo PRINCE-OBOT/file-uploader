@@ -546,14 +546,26 @@
   </form>
 </dialog>
 
+<dialog class="modify_folder_dialog">
+  <form action="" class="modify_folder_form">
+    <button>New Folder</button>
+    <button>New File</button>
+    <button>Rename</button>
+    <button class="delete_folder">Delete</button>
+  </form>
+</dialog>
+
 <script type="module">
   import { fetchGet, fetchPost, getValidUrl } from "/utils/helpers.js";
+
+  const main = document.querySelector("main");
 
   const fileDialog = document.querySelector(".file_dialog");
   const createFileInput = document.querySelector(".createFileInput");
   const fileList = document.querySelector(".fileList");
   const uploadBtn = document.querySelector(".uploadBtn");
   const closeFileDialog = document.querySelector(".close_file_dialog");
+  const modifyFolderDialog = document.querySelector(".modify_folder_dialog");
 
   const fileDisplayWrap = document.querySelector(".file_display_wrap");
   const fileDisplayWrapContent = document.querySelector(
@@ -592,6 +604,8 @@
     ".root_folder_and_file_wrap"
   );
   const createFolder = document.querySelector(".create_folder");
+
+  let pressTimer, isTime;
 
   // click edit
   // replace the space with input
@@ -703,7 +717,7 @@
       const fileName = document.createElement("div");
 
       fileWrap.classList.add("file_wrap");
-      fileName.classList.add("file_name");
+      fileName.classList.add("file_name", "cursor");
 
       fileName.textContent = file.name;
 
@@ -726,7 +740,7 @@
 
       folderWrap.classList.add("folder_wrap");
       folderNameWrap.classList.add("folder_name_wrap");
-      folderName.classList.add("folder_name");
+      folderName.classList.add("folder_name", "cursor");
       subFolderAndFileWrap.classList.add("sub_folder_and_file_wrap");
 
       folderName.textContent = folder.name;
@@ -797,6 +811,30 @@
     }
   }
 
+  function setLeftOfDialog() {
+    const bodyWidth = document.body.getBoundingClientRect().width;
+    const mainWidth = main.getBoundingClientRect().width;
+
+    const leftValue = (bodyWidth - mainWidth) / 2;
+
+    modifyFolderDialog.style.left = `${leftValue}px`;
+  }
+
+  function handleDialogFolderModify() {
+    pressTimer = setTimeout(() => {
+      setLeftOfDialog();
+      console.log("child", modifyFolderDialog.open);
+
+      modifyFolderDialog.showModal();
+
+      isTime = true;
+    }, 500);
+  }
+
+  function cancelPress() {
+    clearTimeout(pressTimer);
+  }
+
   function handleRenameFileName() {
     const fileId = fileDisplayWrapContent.getAttribute("data-file-id");
 
@@ -863,6 +901,14 @@
     fileActionObj[action]();
   }
 
+  function closeDialogModal() {
+    if (!isTime && modifyFolderDialog.open) {
+      modifyFolderDialog.close();
+    }
+
+    isTime = false;
+  }
+
   renderFoldersAndFiles();
 
   uploadBtn.addEventListener("click", handleUploadFile);
@@ -873,8 +919,18 @@
 
   rootFolderAndFileWrap.addEventListener("click", handleFolderAndFileOpen);
 
+  rootFolderAndFileWrap.addEventListener(
+    "pointerdown",
+    handleDialogFolderModify
+  );
+  rootFolderAndFileWrap.addEventListener("pointerleave", cancelPress);
+  rootFolderAndFileWrap.addEventListener("pointerup", cancelPress);
+  rootFolderAndFileWrap.addEventListener("pointercancel", cancelPress);
+
   // file action
 
   fileAction.addEventListener("click", handleFileAction);
   inpFileName.addEventListener("change", handleRenameFileName);
+
+  document.body.addEventListener("click", closeDialogModal);
 </script>
