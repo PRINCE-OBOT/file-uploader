@@ -307,7 +307,7 @@ hr {
   margin-top: 20px;
 }
 
-.createFileInput {
+.createFileInput, .createSubFileInput {
   opacity: 0;
   position: absolute;
   inset: 0;
@@ -367,13 +367,6 @@ hr {
   width: min(95%, 400px);
 }
 
-.modify_folder_form {
-  padding: 20px 30px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 6px;
-}
-
 .modify_folder_dialog:open {
   translate: -50% 0;
   transition: 100ms;
@@ -383,6 +376,17 @@ hr {
   .modify_folder_dialog[open] {
     translate: -50% 100%;
   }
+}
+
+.modify_folder_form {
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.new_file{
+  position: relative;
 }
 
 .modify_folder_form > button {
