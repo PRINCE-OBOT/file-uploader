@@ -548,10 +548,18 @@
 
 <dialog class="modify_folder_dialog">
   <form action="" class="modify_folder_form">
-    <button>New Folder</button>
-    <button>New File</button>
-    <button>Rename</button>
-    <button class="delete_folder">Delete</button>
+    <button type="button" data-modify-folder-action="new-folder">
+      New Folder
+    </button>
+    <button type="button" data-modify-folder-action="new-file">New File</button>
+    <button type="button" data-modify-folder-action="rename">Rename</button>
+    <button
+      type="button"
+      data-modify-folder-action="delete"
+      class="delete_folder"
+    >
+      Delete
+    </button>
   </form>
 </dialog>
 
@@ -821,8 +829,64 @@
     }
   }
 
-  function handleDialogFolderModify() {
+  let lastClickFolder;
+
+  // when input is empty remove
+  // if not send
+  const modifyFolderAction = {
+    "new-folder": () => {
+      const folderWrap = lastClickFolder.closest(".folder_wrap");
+
+      const immediateSubFolder = folderWrap.querySelector(
+        ".folder_name_wrap + .sub_folder_and_file_wrap"
+      );
+
+      const inpSubFolderName = document.createElement("input");
+
+      folderWrap.open = true;
+
+      immediateSubFolder.prepend(inpSubFolderName);
+
+      const folderId = folderWrap.getAttribute("data-folder-id");
+
+      inpSubFolderName.addEventListener("blur", () => {
+        createSubFolder(folderId, inpSubFolderName);
+      });
+
+      inpSubFolderName.focus();
+    }
+  };
+
+  function createSubFolder(parentId, input) {
+    const folderName = input.value.trim();
+
+    if (!folderName) {
+      input.remove();
+      return;
+    }
+
+    const params = new URLSearchParams();
+
+    params.append("parentId", parentId);
+    params.append("name", folderName);
+
+    fetchPost(params, renderFoldersAndFiles);
+  }
+
+  function handleModifyFolderAction(e) {
+    const action = e.target.dataset.modifyFolderAction;
+
+    if (!action || !lastClickFolder) return;
+
+    modifyFolderDialog.close();
+
+    modifyFolderAction[action]();
+  }
+
+  function handleShowModifyFolderDialog(e) {
     pressTimer = setTimeout(() => {
+      lastClickFolder = e.target;
+
       modifyFolderDialog.showModal();
 
       isTime = true;
@@ -919,12 +983,13 @@
 
   rootFolderAndFileWrap.addEventListener(
     "pointerdown",
-    handleDialogFolderModify
+    handleShowModifyFolderDialog
   );
   rootFolderAndFileWrap.addEventListener("pointerleave", cancelPress);
   rootFolderAndFileWrap.addEventListener("pointerup", cancelPress);
   rootFolderAndFileWrap.addEventListener("pointercancel", cancelPress);
 
+  modifyFolderDialog.addEventListener("click", handleModifyFolderAction);
   // file action
 
   fileAction.addEventListener("click", handleFileAction);
