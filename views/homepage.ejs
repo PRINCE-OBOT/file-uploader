@@ -3,7 +3,7 @@
   <h1>Welcome <%= user.firstName %>.</h1>
 
   <div class="create_folder_and_file_wrap">
-    <div class="create_folder act">
+    <div class="create_folder act cursor">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -29,7 +29,7 @@
         <path d="M14 2V6H18" />
       </svg>
       Create File
-      <input type="file" class="createFileInput" multiple />
+      <input type="file" class="createFileInput cursor" multiple />
     </div>
   </div>
 
@@ -616,11 +616,14 @@
   // reload the page
 
   function createNewFolder(e) {
-    const folderName = e.target.value;
+    const input = rootFolderAndFileWrap.querySelector("input");
 
-    const isEmpty = !folderName.trim();
+    const folderName = input.value.trim();
 
-    if (isEmpty) return;
+    if (!folderName) {
+      input.remove();
+      return;
+    }
 
     const params = new URLSearchParams();
     params.append("name", folderName);
@@ -629,11 +632,18 @@
   }
 
   function handleCreateFolder(e) {
-    const inpFolderName = document.createElement("input");
+    const isInput = rootFolderAndFileWrap.querySelector("input");
 
-    inpFolderName.addEventListener("change", createNewFolder);
+    if (isInput) return;
+
+    const inpFolderName = document.createElement("input");
+    inpFolderName.id = "inp_folder_name";
+
+    inpFolderName.addEventListener("blur", createNewFolder);
 
     rootFolderAndFileWrap.prepend(inpFolderName);
+
+    inpFolderName.focus();
   }
 
   function handleCloseFileDialog() {
@@ -811,20 +821,8 @@
     }
   }
 
-  function setLeftOfDialog() {
-    const bodyWidth = document.body.getBoundingClientRect().width;
-    const mainWidth = main.getBoundingClientRect().width;
-
-    const leftValue = (bodyWidth - mainWidth) / 2;
-
-    modifyFolderDialog.style.left = `${leftValue}px`;
-  }
-
   function handleDialogFolderModify() {
     pressTimer = setTimeout(() => {
-      setLeftOfDialog();
-      console.log("child", modifyFolderDialog.open);
-
       modifyFolderDialog.showModal();
 
       isTime = true;

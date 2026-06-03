@@ -362,8 +362,9 @@ hr {
 /* modify folder dialog */
 
 .modify_folder_dialog {
-  top: 50%;
-  translate: 0 -50%;
+  inset: auto auto 0 50%;
+  translate: -50% 0;
+  width: min(95%, 400px);
 }
 
 .modify_folder_form {
@@ -371,6 +372,17 @@ hr {
   display: flex;
   flex-direction: column;
   row-gap: 6px;
+}
+
+.modify_folder_dialog:open {
+  translate: -50% 0;
+  transition: 100ms;
+}
+
+@starting-style {
+  .modify_folder_dialog[open] {
+    translate: -50% 100%;
+  }
 }
 
 .modify_folder_form > button {
@@ -384,7 +396,7 @@ hr {
   }
 }
 
-.delete_folder{
+.delete_folder {
   color: var(--error);
   font-weight: 800;
 }
