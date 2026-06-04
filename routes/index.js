@@ -59,7 +59,7 @@ router.put("/file/:fileId", file.updateController);
 
 // delete routes
 
-router.delete("/folder", folder.deleteController);
+router.delete("/folder/:folderId", folder.deleteController);
 
 router.delete("/file/:fileId", file.deleteController);
 

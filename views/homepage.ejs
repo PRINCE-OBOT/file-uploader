@@ -911,6 +911,25 @@
             });
         }
       });
+    },
+    delete: () => {
+      const folderWrap = lastClickFolder.closest(".folder_wrap");
+
+      const folderId = folderWrap.getAttribute("data-folder-id");
+
+      fetch(`/folder/${folderId}`, {
+        method: "DELETE"
+      })
+        .then((res) => res.text())
+        .then((res) => {
+          if (!JSON.parse(res).ok) return;
+
+          console.log("Folder Deleted Successfully");
+          renderFoldersAndFiles();
+        })
+        .catch((err) => {
+          console.error("Folder deletion error:", err);
+        });
     }
   };
 

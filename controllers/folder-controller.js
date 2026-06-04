@@ -56,7 +56,7 @@ const updateController = async (req, res) => {
 };
 
 const deleteController = async (req, res) => {
-  const folderId = req.body.folderId;
+  const folderId = req.params.folderId;
 
   await prisma.folder.delete({
     where: {
@@ -64,9 +64,7 @@ const deleteController = async (req, res) => {
     }
   });
 
-  res.json({
-    message: "Folder deleted successfully"
-  });
+  return res.json({ ok: true });
 };
 
 module.exports = {
