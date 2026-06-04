@@ -41,7 +41,9 @@ const getController = async (req, res) => {
 };
 
 const updateController = async (req, res) => {
-  const { folderId, name } = req.body;
+  const folderId = req.params.folderId;
+
+  const { name } = req.body;
 
   await prisma.folder.update({
     where: { id: folderId },
@@ -50,7 +52,7 @@ const updateController = async (req, res) => {
     }
   });
 
-  res.json({ mes: "Folder updated successfully" });
+  return res.json({ ok: true });
 };
 
 const deleteController = async (req, res) => {

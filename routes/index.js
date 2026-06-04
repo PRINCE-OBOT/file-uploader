@@ -53,7 +53,7 @@ router.post("/share", share.postController);
 
 // update routes
 
-router.put("/folder", folder.updateController);
+router.put("/folder/:folderId", folder.updateController);
 
 router.put("/file/:fileId", file.updateController);
 
