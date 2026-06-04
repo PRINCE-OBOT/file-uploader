@@ -561,6 +561,9 @@
       />
     </button>
     <button type="button" data-modify-folder-action="rename">Rename</button>
+    <button type="button" class="share_link" data-modify-folder-action="share-link">
+      Share Link
+    </button>
     <button
       type="button"
       data-modify-folder-action="delete"
@@ -842,6 +845,14 @@
 
   let lastClickFolder;
 
+  const getLastClickFolderId = () => {
+    const folderWrap = lastClickFolder.closest(".folder_wrap");
+
+    const folderId = folderWrap.getAttribute("data-folder-id");
+
+    return folderId;
+  };
+
   const modifyFolderAction = {
     "new-folder": () => {
       modifyFolderDialog.close();
@@ -912,10 +923,18 @@
         }
       });
     },
-    delete: () => {
-      const folderWrap = lastClickFolder.closest(".folder_wrap");
 
-      const folderId = folderWrap.getAttribute("data-folder-id");
+    "share-link": async () => {
+      try {
+        navigator.clipboard.writeText(
+          `${location.host}/share/${getLastClickFolderId()}`
+        );
+      } catch (err) {
+        console.error("Failed to copy", err);
+      }
+    },
+    delete: () => {
+      const folderId = getLastClickFolderId();
 
       fetch(`/folder/${folderId}`, {
         method: "DELETE"

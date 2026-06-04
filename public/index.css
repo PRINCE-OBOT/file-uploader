@@ -405,6 +405,10 @@ hr {
   font-weight: 800;
 }
 
+.share_link{
+  color: rgb(3, 105, 3);
+}
+
 main {
   display: flex;
   min-height: 90vh;
