@@ -410,6 +410,18 @@ hr {
   color: rgb(3, 105, 3);
 }
 
+.expired_at_wrap {
+  padding-bottom: 10px;
+  color: var(--transparent-black-sm);
+}
+
+.inp_minutes {
+  max-width: 60px;
+  height: 35px;
+  color: var(--transparent-black-xsm);
+  text-align: center;
+}
+
 main {
   display: flex;
   min-height: 90vh;

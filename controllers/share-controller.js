@@ -2,18 +2,18 @@ const { format } = require("date-fns");
 const { prisma } = require("../lib/prisma");
 
 const postController = async (req, res) => {
-  const folderId = req.body.folderId;
+  const { folderId, minutes } = req.body;
 
-  const oneDay = new Date(Date.now() + 24 * 60 * 60 * 1000); // Expires in 24 hours
+  const expiresAt = new Date(Date.now() + minutes * 60 * 1000); // Expires in 24 hours
 
   await prisma.sharedFolder.upsert({
     where: { folderId },
     update: {
-      expiresAt: oneDay
+      expiresAt
     },
     create: {
       folderId,
-      expiresAt: oneDay
+      expiresAt
     }
   });
 
@@ -110,10 +110,9 @@ const getController = async (req, res) => {
 
   parentFolder.splice(0);
 
-
   // Assign the sharedFolderId to all children and files of the folder
   // to make them accessible through the shared link
-  
+
   if (folder) {
     await prisma.folder.update({
       where: { id: folder.id },

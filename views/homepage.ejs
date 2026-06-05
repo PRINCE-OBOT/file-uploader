@@ -557,17 +557,27 @@
         type="file"
         class="createSubFileInput cursor"
         data-modify-folder-action="new-file"
+        data-dialog-status="hold"
         multiple
       />
     </button>
+    
     <button type="button" data-modify-folder-action="rename">Rename</button>
+    
     <button
       type="button"
-      class="share_link"
+      class="share_link".
       data-modify-folder-action="share-link"
     >
+    <div class="expired_at_wrap">
+      <label for="expire_at" >Expire at
+        <input type="number" placeholder="1" id="expire_at" class="inp_minutes" data-dialog-status="hold">
+        minute(s)
+      </label>
+    </div>
       Share Link
     </button>
+
     <button
       type="button"
       data-modify-folder-action="delete"
@@ -929,7 +939,10 @@
     "share-link": async () => {
       const params = new URLSearchParams();
 
+      const expiresAt = parseInt(document.querySelector('.inp_minutes').value)
+
       params.append("folderId", getLastClickFolderId());
+      params.append("minutes", expiresAt);
 
       fetchPost(params, () => {
         try {
@@ -1067,8 +1080,8 @@
   }
 
   function closeDialogModal(e) {
-    const isSelectNewFile = e.targ;
-    if (e.target.dataset.modifyFolderAction === "new-file") return;
+    const isSelectNewFile = e.target;
+    if (e.target.dataset.dialogStatus === "hold") return;
 
     if (!isTime && modifyFolderDialog.open) {
       modifyFolderDialog.close();
