@@ -7,8 +7,8 @@ export async function fetchGet(routes) {
   }
 }
 
-export function fetchPost(params, cb) {
-  fetch(`/folder`, {
+export function fetchPost(params, cb, route = "/folder") {
+  fetch(route, {
     method: "POST",
     body: params
   })

@@ -3,10 +3,16 @@ const { prisma } = require("../lib/prisma");
 const postController = async (req, res) => {
   const folderId = req.body.folderId;
 
-  await prisma.sharedFolder.create({
-    data: {
+  const oneDay = new Date(Date.now() + 24 * 60 * 60 * 1000); // Expires in 24 hours
+
+  await prisma.sharedFolder.upsert({
+    where: { folderId },
+    update: {
+      expiresAt: oneDay
+    },
+    create: {
       folderId,
-      expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000) // Expires in 24 hours
+      expiresAt: oneDay
     }
   });
 
@@ -15,17 +21,15 @@ const postController = async (req, res) => {
     data: { sharedFolderId: folderId }
   });
 
-  res.json({
-    message: "Folder shared successfully"
-  });
+  return res.json({ ok: true });
 };
 
-const folderNames = [];
+const parentFolder = [];
 
-const pushFolderNamesRec = async (folder) => {
+const pushParentFolderRec = async (folder) => {
   if (!folder) return;
 
-  folderNames.push(folder.name);
+  parentFolder.unshift(folder);
 
   if (folder.id === folder.sharedFolderId) return;
 
@@ -38,7 +42,7 @@ const pushFolderNamesRec = async (folder) => {
     }
   });
 
-  pushFolderNamesRec(folderObj.parent);
+  pushParentFolderRec(folderObj.parent);
 };
 
 const getController = async (req, res) => {
@@ -70,27 +74,32 @@ const getController = async (req, res) => {
   });
 
   // redirect to log in if such id does not exist in the share folder db
-  if (sharedFolderArr.length === 0)
-    return res.status(400).json({ message: "shared folder id does not exist" });
+  if (sharedFolderArr.length === 0) res.redirect("/log-in");
 
   const sharedFolder = sharedFolderArr[0];
 
   //  redirect to log in if id is expired
-  if (sharedFolder.expiresAt < new Date())
-    return res.status(400).json({ message: "share folder id expires" });
+  if (sharedFolder.expiresAt < new Date()) res.redirect("/log-in");
 
   if (file) {
-    folderNames.push(file.name);
+    parentFolder.push(file.name);
 
-    await pushFolderNamesRec(file.folder);
-    res.json({ file, folderNames });
+    await pushParentFolderRec(file.folder);
+    res.json({ file, parentFolder });
   } else {
     // otherwise, get the name of the it parent recursively, it children and the parent folder
-    await pushFolderNamesRec(folder);
-    res.json({ folder, folderNames });
+    
+
+    await pushParentFolderRec(folder);
+    res.render("index", {
+      title: "File Uploader | Shared",
+      pageTemplate: "shared",
+      folder,
+      parentFolder
+    });
   }
 
-  folderNames.splice(0);
+  parentFolder.splice(0);
 
   if (folder) {
     await prisma.folder.update({
@@ -114,3 +123,9 @@ const getController = async (req, res) => {
 };
 
 module.exports = { getController, postController };
+
+// if folder is in the object
+// render it
+// if file is in the object, render it
+// when file come
+// if

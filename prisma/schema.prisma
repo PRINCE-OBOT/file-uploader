@@ -61,7 +61,7 @@ model File {
   userId String
   user   User  @relation(fields: [userId], references: [id])
 
-  sharedFolderId  String?
+  sharedFolderId  String? 
 
   // which folder it lives in
   folderId String?
@@ -73,7 +73,7 @@ model SharedFolder {
   expiresAt DateTime // when the link stops working
   createdAt DateTime @default(now())
 
-  folderId String
+  folderId String @unique
   folder   Folder @relation(fields: [folderId], references: [id])
 }
 

@@ -561,7 +561,11 @@
       />
     </button>
     <button type="button" data-modify-folder-action="rename">Rename</button>
-    <button type="button" class="share_link" data-modify-folder-action="share-link">
+    <button
+      type="button"
+      class="share_link"
+      data-modify-folder-action="share-link"
+    >
       Share Link
     </button>
     <button
@@ -766,7 +770,6 @@
       const folderNameWrap = document.createElement("summary");
       const folderName = document.createElement("span");
       const inpFolderName = document.createElement("input");
-
       const subFolderAndFileWrap = document.createElement("div");
 
       folderWrap.classList.add("folder_wrap");
@@ -778,7 +781,6 @@
       folderName.textContent = folder.name;
 
       folderWrap.setAttribute("data-folder-id", `${folder.id}`);
-      folderWrap.setAttribute("tabindex", "0");
       folderNameWrap.append(folderName, inpFolderName);
       folderWrap.append(folderNameWrap, subFolderAndFileWrap);
 
@@ -925,13 +927,19 @@
     },
 
     "share-link": async () => {
-      try {
-        navigator.clipboard.writeText(
-          `${location.host}/share/${getLastClickFolderId()}`
-        );
-      } catch (err) {
-        console.error("Failed to copy", err);
-      }
+      const params = new URLSearchParams();
+
+      params.append("folderId", getLastClickFolderId());
+
+      fetchPost(params, () => {
+        try {
+          navigator.clipboard.writeText(
+            `${location.host}/share/${getLastClickFolderId()}`
+          );
+        } catch (err) {
+          console.error("Failed to copy", err);
+        }
+      }, '/share');
     },
     delete: () => {
       const folderId = getLastClickFolderId();

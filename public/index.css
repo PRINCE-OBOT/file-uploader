@@ -307,7 +307,8 @@ hr {
   margin-top: 20px;
 }
 
-.createFileInput, .createSubFileInput {
+.createFileInput,
+.createSubFileInput {
   opacity: 0;
   position: absolute;
   inset: 0;
@@ -385,7 +386,7 @@ hr {
   row-gap: 6px;
 }
 
-.new_file{
+.new_file {
   position: relative;
 }
 
@@ -405,7 +406,7 @@ hr {
   font-weight: 800;
 }
 
-.share_link{
+.share_link {
   color: rgb(3, 105, 3);
 }
 
@@ -513,6 +514,30 @@ main {
   width: min(99%, 1000px);
   border-radius: 10px;
   box-shadow: var(--bx-shadow);
+}
+
+/* shared | folder names */
+.folder_path_wrap {
+  display: flex;
+  padding: 10px 0;
+}
+
+.folder_wrap_shared, .folder_name_wrap_shared{
+  color: var(--transparent-black-xsm);
+}
+
+.folder_name_wrap_shared {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.folder_name_shared {
+  font-weight: 900;
+}
+
+.folder_name_separator_shared {
+  color: var(--transparent-black-sm);
 }
 
 .hide {
