@@ -522,7 +522,9 @@ main {
   padding: 10px 0;
 }
 
-.folder_wrap_shared, .folder_name_wrap_shared{
+.folder_wrap_shared,
+.folder_name_wrap_shared,
+.file_wrap_shared {
   color: var(--transparent-black-xsm);
 }
 

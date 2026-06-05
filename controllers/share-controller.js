@@ -64,6 +64,8 @@ const getController = async (req, res) => {
       include: { folder: true }
     });
 
+    if (!file) return res.redirect("/log-in");
+
     sharedFolderId = file.sharedFolderId;
   } else {
     sharedFolderId = folder.sharedFolderId;
@@ -74,21 +76,23 @@ const getController = async (req, res) => {
   });
 
   // redirect to log in if such id does not exist in the share folder db
-  if (sharedFolderArr.length === 0) res.redirect("/log-in");
+  if (sharedFolderArr.length === 0) return res.redirect("/log-in");
 
   const sharedFolder = sharedFolderArr[0];
 
   //  redirect to log in if id is expired
-  if (sharedFolder.expiresAt < new Date()) res.redirect("/log-in");
+  if (sharedFolder.expiresAt < new Date()) return res.redirect("/log-in");
 
   if (file) {
-    parentFolder.push(file.name);
-
     await pushParentFolderRec(file.folder);
-    res.json({ file, parentFolder });
+    res.render("index", {
+      title: "File Uploader | Shared",
+      pageTemplate: "shared",
+      file,
+      parentFolder
+    });
   } else {
     // otherwise, get the name of the it parent recursively, it children and the parent folder
-    
 
     await pushParentFolderRec(folder);
     res.render("index", {
