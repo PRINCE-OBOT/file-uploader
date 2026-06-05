@@ -1068,6 +1068,8 @@
 
       name.classList.add("hide");
       input.classList.remove("hide");
+
+      input.focus()
     },
 
     delete: () => {
@@ -1140,7 +1142,7 @@
   // file action
 
   fileAction.addEventListener("click", handleFileAction);
-  inpFileName.addEventListener("change", handleRenameFileName);
+  inpFileName.addEventListener("blur", handleRenameFileName);
 
   document.body.addEventListener("click", closeDialogModal);
 
@@ -1151,8 +1153,6 @@
   closeSideBarBtn.addEventListener('click', ()=>{
     navLeftSideBar('remove')
   })
-  // when a file name is about to be rename and then no focus is made in the input, it should blur out and send the available name
-
   // cant upload folder in root directory
 
   // cant upload file in the root directory

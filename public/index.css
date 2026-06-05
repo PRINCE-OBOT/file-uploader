@@ -463,7 +463,7 @@ main {
 /* folder wrap end */
 
 .file_display_wrap_content {
-  padding: 20px;
+  padding: 50px 20px 20px 20px;
 }
 
 .file_empty {
@@ -480,6 +480,8 @@ main {
 .file_display_heading {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 10px;
 }
 
 .file_display_action_wrap {
@@ -525,6 +527,7 @@ main {
   }
   & > div:nth-child(2n + 2) {
     justify-self: right;
+    text-align: right;
   }
 }
 
@@ -584,7 +587,7 @@ main {
   .close_side_bar_btn {
     display: block;
     position: absolute;
-    top: 50px;
+    top: 10px;
     background-color: var(--pri-accent);
     border: none;
     color: var(--white);
@@ -603,7 +606,6 @@ main {
     opacity: 0.8;
     text-align: center;
     z-index: 2;
-    /* transform: translateX(100%); */
   }
 
   .show {
