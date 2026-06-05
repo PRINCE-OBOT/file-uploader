@@ -79,7 +79,8 @@ const postController = [
     }
 
     const userId = req.user.id;
-    const folderId = req.body.folderId[0] || null;
+    const folderIds = req.body.folderId
+    const folderId = Array.isArray(folderIds) ? folderIds[0] : folderIds;
 
     await Promise.all(
       validFiles.map((file) =>

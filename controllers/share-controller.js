@@ -1,3 +1,4 @@
+const { format } = require("date-fns");
 const { prisma } = require("../lib/prisma");
 
 const postController = async (req, res) => {
@@ -85,6 +86,10 @@ const getController = async (req, res) => {
 
   if (file) {
     await pushParentFolderRec(file.folder);
+
+    file.createdAt = format(file.createdAt, "EEE dd, MMMM, yyyy");
+    file.updatedAt = format(file.updatedAt, "EEE dd, MMMM, yyyy");
+
     res.render("index", {
       title: "File Uploader | Shared",
       pageTemplate: "shared",
@@ -105,9 +110,13 @@ const getController = async (req, res) => {
 
   parentFolder.splice(0);
 
+
+  // Assign the sharedFolderId to all children and files of the folder
+  // to make them accessible through the shared link
+  
   if (folder) {
     await prisma.folder.update({
-      where: { id: sharedFolderId },
+      where: { id: folder.id },
       data: {
         children: {
           updateMany: {
