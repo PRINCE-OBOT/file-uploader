@@ -179,8 +179,7 @@ button {
 }
 
 /* form */
-.form_wrap,
-.passcode_form {
+.form_wrap {
   padding-top: 60px;
   width: min(90%, 450px);
   margin: 0 auto 0;
@@ -189,15 +188,17 @@ button {
   padding: 20px;
 }
 
-.passcode_form_admin {
-  margin-top: 50px;
-}
-
+.signup_form,
+.login_form,
 .form_wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 25px;
+}
+
+.passcode_form_admin {
+  margin-top: 50px;
 }
 
 form,
@@ -440,8 +441,9 @@ main {
   flex-direction: column;
   row-gap: 10px;
   box-shadow: var(--bx-shadow);
-  background: var(--transparent-black-lg);
+  background: var(--white);
   padding: 20px;
+  border-right: 2px solid var(--pri-accent);
 
   max-width: 260px;
   overflow: auto;
@@ -494,9 +496,17 @@ main {
   max-width: 300px;
 }
 
+.file_display_wrap_content .file_name {
+  max-width: 200px;
+  overflow-x: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+
 .file_display_action_wrap svg {
   pointer-events: none;
 }
+
 /* file wrap  */
 
 .file_wrap {
@@ -552,6 +562,65 @@ main {
 
 .folder_name_separator_shared {
   color: var(--transparent-black-sm);
+}
+
+.open_side_bar_btn,
+.close_side_bar_btn {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .root_folder_and_file_wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: none;
+    transition: allow-discrete 300ms ease-in;
+    transform: translateX(-100%);
+    z-index: 2;
+  }
+
+  .open_side_bar_btn,
+  .close_side_bar_btn {
+    display: block;
+    position: absolute;
+    top: 50px;
+    background-color: var(--pri-accent);
+    border: none;
+    color: var(--white);
+    padding: 5px 8px;
+    box-shadow: var(--bx-shadow);
+  }
+
+  .close_side_bar_btn {
+    right: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+    text-align: center;
+    z-index: 2;
+    /* transform: translateX(100%); */
+  }
+
+  .show {
+    display: flex;
+    transform: translateX(0);
+    transition: 300ms ease-out;
+  }
+
+  @starting-style {
+    .show {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+.blur {
+  filter: blur(2px);
 }
 
 .hide {

@@ -59,7 +59,7 @@ app.post("/log-in", (req, res, next) => {
   req.flash("email", req.body.email);
 
   passport.authenticate("local", {
-    successRedirect: "/homepage",
+    successRedirect: "/",
     failureRedirect: "/log-in",
     failureFlash: "Incorrect email or password"
   })(req, res, next);

@@ -36,6 +36,10 @@
   <hr />
 
   <main>
+    <button class="open_side_bar_btn">&#9776;</button>
+
+    <button class="close_side_bar_btn hide">X</button>
+
     <div class="root_folder_and_file_wrap"></div>
     <div class="file_display_wrap">
       <div class="file_empty">
@@ -462,7 +466,7 @@
 
       <div class="file_display_wrap_content hide">
         <div class="file_display_heading">
-          <h2 class="file_name"></h2>
+          <h4 class="file_name"></h4>
           <input type="text" class="inp_file_name hide" />
 
           <div class="file_display_action_wrap">
@@ -561,20 +565,28 @@
         multiple
       />
     </button>
-    
+
     <button type="button" data-modify-folder-action="rename">Rename</button>
-    
+
     <button
       type="button"
-      class="share_link".
+      class="share_link"
+      .
       data-modify-folder-action="share-link"
     >
-    <div class="expired_at_wrap">
-      <label for="expire_at" >Expire at
-        <input type="number" placeholder="1" id="expire_at" class="inp_minutes" data-dialog-status="hold">
-        minute(s)
-      </label>
-    </div>
+      <div class="expired_at_wrap">
+        <label for="expire_at"
+          >Expire at
+          <input
+            type="number"
+            placeholder="1"
+            id="expire_at"
+            class="inp_minutes"
+            data-dialog-status="hold"
+          />
+          minute(s)
+        </label>
+      </div>
       Share Link
     </button>
 
@@ -631,6 +643,9 @@
   const displayFileUpdatedAt = fileDisplayWrapContent.querySelector(
     ".display_file_updated_at"
   );
+
+  const openSideBarBtn = document.querySelector('.open_side_bar_btn')
+  const closeSideBarBtn = document.querySelector('.close_side_bar_btn')
 
   const selectedFiles = [];
 
@@ -939,20 +954,25 @@
     "share-link": async () => {
       const params = new URLSearchParams();
 
-      const expiresAt = parseInt(document.querySelector('.inp_minutes').value)
+      const expiresAt =
+        parseInt(document.querySelector(".inp_minutes").value) || 1;
 
       params.append("folderId", getLastClickFolderId());
       params.append("minutes", expiresAt);
 
-      fetchPost(params, () => {
-        try {
-          navigator.clipboard.writeText(
-            `${location.host}/share/${getLastClickFolderId()}`
-          );
-        } catch (err) {
-          console.error("Failed to copy", err);
-        }
-      }, '/share');
+      fetchPost(
+        params,
+        () => {
+          try {
+            navigator.clipboard.writeText(
+              `${location.host}/share/${getLastClickFolderId()}`
+            );
+          } catch (err) {
+            console.error("Failed to copy", err);
+          }
+        },
+        "/share"
+      );
     },
     delete: () => {
       const folderId = getLastClickFolderId();
@@ -1090,6 +1110,12 @@
     isTime = false;
   }
 
+  function navLeftSideBar(method) {
+  rootFolderAndFileWrap.classList[method]("show");
+  fileDisplayWrap.classList[method]("blur");
+  closeSideBarBtn.classList[method === 'add' ? 'remove' : 'add']('hide')
+}
+
   renderFoldersAndFiles();
 
   uploadBtn.addEventListener("click", handleUploadFile);
@@ -1117,4 +1143,17 @@
   inpFileName.addEventListener("change", handleRenameFileName);
 
   document.body.addEventListener("click", closeDialogModal);
+
+  openSideBarBtn.addEventListener('click', ()=>{
+    navLeftSideBar('add')
+  })
+
+  closeSideBarBtn.addEventListener('click', ()=>{
+    navLeftSideBar('remove')
+  })
+  // when a file name is about to be rename and then no focus is made in the input, it should blur out and send the available name
+
+  // cant upload folder in root directory
+
+  // cant upload file in the root directory
 </script>
