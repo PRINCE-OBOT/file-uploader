@@ -34,7 +34,7 @@ const postController = [
 
     req.files.forEach((file) => {
       const limits = {
-        image: 1024 * 1024 * 10,
+        image: 1024 * 1,
         video: 1024 * 1024 * 50
       };
 
@@ -50,11 +50,7 @@ const postController = [
 
     if (invalidFiles.length > 0) {
       return res.status(400).json({
-        errors: [
-          {
-            msg: "Image and Video file size should not exceed 10MB, 50MB respectively"
-          }
-        ],
+        message: "Some files failed validation",
         invalidFiles
       });
     }
@@ -81,7 +77,7 @@ const postController = [
       })
     );
 
-    res.json({ message: "Created a file" });
+    res.json({ ok: true, message: "Created a file" });
   }
 ];
 

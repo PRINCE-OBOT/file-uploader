@@ -37,6 +37,8 @@
     Long press on <em>created folder</em> for more options.
   </p>
 
+  <p class="invalid_files_error hide"></p>
+
   <hr />
 
   <main>
@@ -45,7 +47,7 @@
     <button class="close_side_bar_btn hide">X</button>
 
     <div class="root_folder_and_file_wrap"></div>
-    
+
     <div class="file_display_wrap">
       <div class="file_empty">
         <svg
@@ -550,6 +552,11 @@
 <dialog class="file_dialog">
   <form action="" class="file_form">
     <button type="button" class="close_file_dialog act">X</button>
+
+    <div class="invalid_file_inst">
+      <p class="invaild_file_inst">File size must not be larger than 1MB</p>
+    </div>
+
     <div class="fileList"></div>
     <button class="uploadBtn act" type="button">Upload</button>
   </form>
@@ -622,6 +629,7 @@
   const fileDisplayWrapContent = document.querySelector(
     ".file_display_wrap_content"
   );
+  const invalidFilesError = document.querySelector(".invalid_files_error");
   const fileEmpty = document.querySelector(".file_empty");
 
   const inpFileName = fileDisplayWrapContent.querySelector(".inp_file_name");
@@ -696,6 +704,7 @@
   function handleCloseFileDialog() {
     fileDialog.close();
     selectedFiles.splice(0);
+    createFileInput.value = "";
     fileList.innerHTML = "";
   }
 
@@ -716,7 +725,8 @@
       const fileWrap = document.createElement("div");
 
       fileWrap.innerHTML = `
-          <p>Original: ${file.name}</p>
+          <p>Size: ${(file.size / (1024 * 1024)).toFixed(2)}MB</p>
+          <p>Name: ${file.name}</p>
           <label for="rename-file-${index}">Rename:</label><input type="text" id="rename-file-${index}" value="${file.name}" data-index="${index}" />
           <hr/>
         `;
@@ -753,12 +763,24 @@
       body: formData
     })
       .then((res) => res.text())
-      .then((data) => {
-        console.log("Upload success:", data);
+      .then((res) => {
+        const obj = JSON.parse(res);
+
+        if (obj.ok) {
+          renderFoldersAndFiles();
+        } else {
+          const invalidFiles = obj.invalidFiles.map(
+            (file) =>
+              `(file name:${file.originalname}, size: ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
+          );
+          invalidFilesError.textContent = `${obj.message}, ${invalidFiles.join(", ")}`;
+          invalidFilesError.classList.remove("hide");
+        }
+
         selectedFiles.splice(0);
-        renderFoldersAndFiles();
       })
       .catch((err) => {
+        console.log(err);
         console.error("Upload error:", err);
       });
   }
