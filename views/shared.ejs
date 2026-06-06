@@ -14,6 +14,10 @@
   <hr />
 
   <main>
+    <button class="open_side_bar_btn">&#9776;</button>
+
+    <button class="close_side_bar_btn hide">X</button>
+
     <div class="root_folder_and_file_wrap">
       <% if(locals.folder){ %>
         <% folder.children.reverse().forEach((folder)=>{ %>
@@ -40,15 +44,14 @@
       <% } %>
     </div>
 
+    <div class="file_preview_wrap">
     <% if(locals.file){ %>
       <div class="file_display_wrap_content">
         <h2 class="file_name"> <%= file.name %> </h2>
         <div class="file_display_wrap" >
     
-          <div class="file_preview_wrap">
             <% const src = file.url.split('/').slice(1).join('/') %>
               <img class="file_preview" src="/<%=src%>" />
-          </div>
   
           <div class="file_data">
               <div class="file_size">Size</div>
@@ -486,13 +489,13 @@
             </svg>
           </div>
         <% } %>
-  
+      </div>
+
        <div class="file_display_wrap_content hide">
           <div class="file_display_heading">
               <h2 class="file_name"></h2>
               <input type="text" class="inp_file_name hide" />
           </div>
-  
   
           </div>
       </div>
@@ -503,7 +506,24 @@
 
 <script type="module">
   const rootFolderAndFileWrap = document.querySelector('.root_folder_and_file_wrap')
+  const fileDisplayWrap = document.querySelector(".file_display_wrap");
 
+  const openSideBarBtn = document.querySelector(".open_side_bar_btn");
+  const closeSideBarBtn = document.querySelector(".close_side_bar_btn");
+
+  function navLeftSideBar(method) {
+    rootFolderAndFileWrap.classList[method]("show");
+    fileDisplayWrap.classList[method]("blur");
+    closeSideBarBtn.classList[method === "add" ? "remove" : "add"]("hide");
+  }
+
+   openSideBarBtn.addEventListener("click", () => {
+    navLeftSideBar("add");
+  });
+
+  closeSideBarBtn.addEventListener("click", () => {
+    navLeftSideBar("remove");
+  });
   // when i click on file
   // it should render in the open space
 </script>
