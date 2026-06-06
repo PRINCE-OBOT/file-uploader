@@ -83,15 +83,6 @@ app.use((req, res) => {
 
 app.use(errorController);
 
-// prisma script
-async function main() {
-  // const folder = await prisma.file.findMany({
-  //   where: {}
-  // });
-
-  // console.log(folder);
-}
-
 main();
 
 if (require.main === module) {
