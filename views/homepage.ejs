@@ -767,7 +767,7 @@
         const obj = JSON.parse(res);
 
         if (obj.ok) {
-          invalidFilesError.textContent = ''
+          invalidFilesError.classList.add("hide");
           renderFoldersAndFiles();
         } else {
           const invalidFiles = obj.invalidFiles.map(
