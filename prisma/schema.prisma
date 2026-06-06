@@ -37,7 +37,7 @@ model Folder {
 
   // self referential
   parentId String?
-  parent   Folder?  @relation("FolderTree", fields: [parentId], references: [id])
+  parent   Folder?  @relation("FolderTree", fields: [parentId], references: [id], onDelete: Cascade)
   children Folder[] @relation("FolderTree")
 
   // contents
@@ -65,7 +65,7 @@ model File {
 
   // which folder it lives in
   folderId String?
-  folder   Folder? @relation(fields: [folderId], references: [id])
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
 }
 
 model SharedFolder {
