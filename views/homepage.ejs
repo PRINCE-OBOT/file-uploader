@@ -644,8 +644,8 @@
     ".display_file_updated_at"
   );
 
-  const openSideBarBtn = document.querySelector('.open_side_bar_btn')
-  const closeSideBarBtn = document.querySelector('.close_side_bar_btn')
+  const openSideBarBtn = document.querySelector(".open_side_bar_btn");
+  const closeSideBarBtn = document.querySelector(".close_side_bar_btn");
 
   const selectedFiles = [];
 
@@ -695,8 +695,11 @@
   }
 
   function handleCreateFile(e) {
-    fileDialog.showModal();
     selectedFiles.push(...Array.from(e.target.files));
+
+    if (selectedFiles.length < 1) return;
+
+    fileDialog.showModal();
 
     renderSelectedFiles();
   }
@@ -1070,7 +1073,7 @@
       name.classList.add("hide");
       input.classList.remove("hide");
 
-      input.focus()
+      input.focus();
     },
 
     delete: () => {
@@ -1114,10 +1117,10 @@
   }
 
   function navLeftSideBar(method) {
-  rootFolderAndFileWrap.classList[method]("show");
-  fileDisplayWrap.classList[method]("blur");
-  closeSideBarBtn.classList[method === 'add' ? 'remove' : 'add']('hide')
-}
+    rootFolderAndFileWrap.classList[method]("show");
+    fileDisplayWrap.classList[method]("blur");
+    closeSideBarBtn.classList[method === "add" ? "remove" : "add"]("hide");
+  }
 
   renderFoldersAndFiles();
 
@@ -1147,12 +1150,13 @@
 
   document.body.addEventListener("click", closeDialogModal);
 
-  openSideBarBtn.addEventListener('click', ()=>{
-    navLeftSideBar('add')
-  })
+  openSideBarBtn.addEventListener("click", () => {
+    navLeftSideBar("add");
+  });
 
-  closeSideBarBtn.addEventListener('click', ()=>{
-    navLeftSideBar('remove')
-  })
+  closeSideBarBtn.addEventListener("click", () => {
+    navLeftSideBar("remove");
+  });
   // cant upload file in the root directory
+  // deleting folder should remove sub folder
 </script>

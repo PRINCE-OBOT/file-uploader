@@ -74,7 +74,7 @@ model SharedFolder {
   createdAt DateTime @default(now())
 
   folderId String @unique
-  folder   Folder @relation(fields: [folderId], references: [id])
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
 }
 
 // required by prisma-session-store for Passport.js sessions

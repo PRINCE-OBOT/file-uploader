@@ -331,6 +331,7 @@ hr {
   left: 50%;
   top: 50%;
   translate: -50% -50%;
+  width: min(90%, 300px);
 }
 
 .file_form {
@@ -347,7 +348,8 @@ hr {
   background: transparent;
   border: none;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  
 }
 
 .uploadBtn {
@@ -508,6 +510,12 @@ main {
 
 .file_display_action_wrap svg {
   pointer-events: none;
+}
+
+/* file list */
+
+.fileList {
+  margin-bottom: 20px;
 }
 
 /* file wrap  */
