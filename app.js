@@ -83,8 +83,6 @@ app.use((req, res) => {
 
 app.use(errorController);
 
-main();
-
 if (require.main === module) {
   app.listen(PORT, (error) => {
     if (error) throw error;
