@@ -33,6 +33,10 @@
     </div>
   </div>
 
+  <p class="folder_more_opt_inst">
+    Long press on <em>created folder</em> for more options.
+  </p>
+
   <hr />
 
   <main>
@@ -730,7 +734,7 @@
 
       const renamedFile = new File([file], newName, { type: file.type });
 
-      let folderId;
+      let folderId = null;
 
       if (lastClickFolder) {
         const folderWrap = lastClickFolder.closest(".folder_wrap");
@@ -1125,7 +1129,12 @@
   renderFoldersAndFiles();
 
   uploadBtn.addEventListener("click", handleUploadFile);
-  createFileInput.addEventListener("change", handleCreateFile);
+
+  createFileInput.addEventListener("change", (e) => {
+    lastClickFolder = null;
+    handleCreateFile(e);
+  });
+
   createSubFileInput.addEventListener("change", handleCreateFile);
 
   closeFileDialog.addEventListener("click", handleCloseFileDialog);

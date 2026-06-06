@@ -9,6 +9,7 @@ const {
 } = require("express-validator");
 const { prisma } = require("../lib/prisma");
 const { format } = require("date-fns");
+const { getFolderId } = require("../public/utils/helpers");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -67,20 +68,44 @@ const validatedFile = [
 
 const postController = [
   upload.array("files", 10),
-  validatedFile,
-  async (req, res) => {
-    const errors = validationResult(req);
+  async (req, res, next) => {
+    const invalidFiles = [];
+    const validFiles = [];
 
-    if (!errors.isEmpty()) {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ errors: [{ msg: "Files are required" }] });
+    }
+
+    req.files.forEach((file) => {
+      const limits = {
+        image: 1024 * 1024 * 10,
+        video: 1024 * 1024 * 50
+      };
+
+      if (
+        (file.mimetype.startsWith("image/") && file.size > limits.image) ||
+        (file.mimetype.startsWith("video/") && file.size > limits.video)
+      ) {
+        invalidFiles.push(file);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (invalidFiles.length > 0) {
       return res.status(400).json({
-        errors: errors.array(),
+        errors: [
+          {
+            msg: "Image and Video file size should not exceed 10MB, 50MB respectively"
+          }
+        ],
         invalidFiles
       });
     }
 
     const userId = req.user.id;
-    const folderIds = req.body.folderId
-    const folderId = Array.isArray(folderIds) ? folderIds[0] : folderIds;
+
+    const folderId = getFolderId(req.body.folderId);
 
     await Promise.all(
       validFiles.map((file) =>
@@ -97,17 +122,14 @@ const postController = [
       )
     );
 
-    res.json({ message: "Created a file" });
-    // ("index", { title: "homepage", pageTemplate: "homepage" });
-
+    // cleanup invalid files
     invalidFiles.forEach((file) => {
       fs.unlink(file.path, (err) => {
         if (err) console.error("Failed to delete invalid file:", err);
       });
     });
 
-    validFiles.splice(0);
-    invalidFiles.splice(0);
+    res.json({ message: "Created a file" });
   }
 ];
 
@@ -178,7 +200,7 @@ const downloadController = async (req, res) => {
   });
   const dirArr = __dirname.split("/");
   const dir = dirArr.slice(0, dirArr.length - 1).join("/");
-  
+
   const filePath = path.join(dir, "public/files/", file.name);
   res.download(filePath, file.originalName); // 2nd arg = name shown to user
 
