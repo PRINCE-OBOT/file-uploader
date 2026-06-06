@@ -198,6 +198,7 @@ const downloadController = async (req, res) => {
   const file = await prisma.file.findUnique({
     where: { id: req.params.fileId }
   });
+  
   const dirArr = __dirname.split("/");
   const dir = dirArr.slice(0, dirArr.length - 1).join("/");
 
