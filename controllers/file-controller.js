@@ -138,7 +138,11 @@ const downloadController = async (req, res) => {
     where: { id: req.params.fileId }
   });
 
-  res.redirect(file.url);
+  const url = cloudinary.url(file.publicId, {
+    flags: "attachment"
+  });
+
+  res.redirect(url);
 };
 
 const deleteController = async (req, res) => {
