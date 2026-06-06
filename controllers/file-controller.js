@@ -10,6 +10,7 @@ const {
 const { prisma } = require("../lib/prisma");
 const { format } = require("date-fns");
 const { getFolderId, uploadToCloudinary } = require("../utils/helpers");
+const cloudinary = require("../lib/cloudinary");
 
 const storage = multer.memoryStorage();
 
