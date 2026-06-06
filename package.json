@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node --watch app.js",
+    "start": "node app.js",
     "db_connect": "psql -U princeobot -d file_uploader",
     "db_view_user": "psql -U princeobot -d file_uploader -c 'SELECT * FROM user;'"
   },
