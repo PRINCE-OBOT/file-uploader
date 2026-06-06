@@ -446,6 +446,7 @@ main {
   border-right: 2px solid var(--pri-accent);
 
   max-width: 260px;
+  min-width: 200px;
   overflow: auto;
 }
 

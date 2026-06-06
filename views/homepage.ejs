@@ -673,12 +673,13 @@
   }
 
   function handleCreateFolder(e) {
-    const isInput = rootFolderAndFileWrap.querySelector("input");
+    const isInput = rootFolderAndFileWrap.querySelector("inp_folder_name_root");
 
     if (isInput) return;
 
     const inpFolderName = document.createElement("input");
-    inpFolderName.id = "inp_folder_name";
+    inpFolderName.id = "inp_folder_name_root";
+    inpFolderName.classList.add("inp_folder_name_root");
 
     inpFolderName.addEventListener("blur", createNewFolder);
 
@@ -1153,7 +1154,5 @@
   closeSideBarBtn.addEventListener('click', ()=>{
     navLeftSideBar('remove')
   })
-  // cant upload folder in root directory
-
   // cant upload file in the root directory
 </script>
