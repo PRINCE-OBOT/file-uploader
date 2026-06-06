@@ -78,6 +78,12 @@ const postController = [
     );
 
     res.json({ ok: true, message: "Created a file" });
+
+    [...validFiles, ...invalidFiles].forEach((file) => {
+      fs.unlink(file.path, (err) => {
+        if (err) console.error("Failed to delete invalid file:", err);
+      });
+    });
   }
 ];
 
