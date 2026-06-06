@@ -50,8 +50,10 @@
         <h2 class="file_name"> <%= file.name %> </h2>
         <div class="file_display_wrap" >
     
-            <% const src = file.url.split('/').slice(1).join('/') %>
-              <img class="file_preview" src="/<%=src%>" />
+            <div class="file_preview_wrap">
+              <% const src = file.url.split('/').slice(1).join('/') %>
+                <img class="file_preview" src="/<%=src%>" />
+            </div>
   
           <div class="file_data">
               <div class="file_size">Size</div>

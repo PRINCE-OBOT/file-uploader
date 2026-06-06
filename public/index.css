@@ -471,6 +471,7 @@ main {
 
 .file_display_wrap_content {
   padding: 50px 20px 20px 20px;
+  width: 100%;
 }
 
 .file_empty {
@@ -546,6 +547,7 @@ main {
 
 .file_preview_wrap {
   padding: 60px 0;
+  flex: 1;
 }
 
 .file_preview {
@@ -636,6 +638,7 @@ main {
 
 .blur {
   filter: blur(2px);
+  transition: 100ms;
 }
 
 .hide {
