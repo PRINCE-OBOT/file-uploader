@@ -9,61 +9,16 @@ const {
 } = require("express-validator");
 const { prisma } = require("../lib/prisma");
 const { format } = require("date-fns");
-const { getFolderId } = require("../public/utils/helpers");
+const { getFolderId, uploadToCloudinary } = require("../utils/helpers");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/files/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
-const invalidFiles = [];
-const validFiles = [];
 const fileNameErr = "File name must";
-
-const separateValidFilesFromInvalid = (file) => {
-  const { size, mimetype } = file;
-
-  const limits = {
-    image: 1024 * 1024 * 10, // 10MB for images
-    video: 1024 * 1024 * 50 // 50MB for videos
-  };
-
-  if (
-    (mimetype.startsWith("image/") && size > limits.image) ||
-    (mimetype.startsWith("video/") && size > limits.video)
-  ) {
-    invalidFiles.push(file);
-  } else {
-    validFiles.push(file);
-  }
-};
 
 const validatedFileName = [
   body("name").trim().notEmpty().withMessage(`${fileNameErr} not be empty`)
-];
-
-const validatedFile = [
-  check("files").custom((value, { req }) => {
-    if (!req.files || req.files.length === 0) {
-      throw new Error("Files are required");
-    }
-
-    req.files.forEach(separateValidFilesFromInvalid);
-
-    if (invalidFiles.length > 0) {
-      throw new Error(
-        "Image and Video file size should not exceed 10MB, 50MB respectively"
-      );
-    }
-
-    return true;
-  })
 ];
 
 const postController = [
@@ -108,26 +63,22 @@ const postController = [
     const folderId = getFolderId(req.body.folderId);
 
     await Promise.all(
-      validFiles.map((file) =>
-        prisma.file.create({
+      validFiles.map(async (file) => {
+        const uploaded = await uploadToCloudinary(file);
+
+        return prisma.file.create({
           data: {
             name: file.originalname,
-            url: file.path,
+            url: uploaded.secure_url,
+            publicId: uploaded.public_id,
             mimetype: file.mimetype,
             size: file.size,
             userId,
             folderId
           }
-        })
-      )
+        });
+      })
     );
-
-    // cleanup invalid files
-    invalidFiles.forEach((file) => {
-      fs.unlink(file.path, (err) => {
-        if (err) console.error("Failed to delete invalid file:", err);
-      });
-    });
 
     res.json({ message: "Created a file" });
   }
@@ -181,42 +132,30 @@ const updateController = [
   }
 ];
 
-const deleteController = async (req, res) => {
-  const fileId = req.params.fileId;
-
-  await prisma.file.delete({
-    where: {
-      id: fileId
-    }
-  });
-
-  return res.json({ ok: true });
-};
-
 const downloadController = async (req, res) => {
-  // dev
   const file = await prisma.file.findUnique({
     where: { id: req.params.fileId }
   });
-  
-  const dirArr = __dirname.split("/");
-  const dir = dirArr.slice(0, dirArr.length - 1).join("/");
 
-  const filePath = path.join(dir, "public/files/", file.name);
-  res.download(filePath, file.originalName); // 2nd arg = name shown to user
+  res.redirect(file.url);
+};
 
-  //  production -- uncomment this for production
+const deleteController = async (req, res) => {
+  const fileId = req.params.fileId;
 
-  // const file = await prisma.file.findUnique({
-  //   where: { id: req.params.fileId }
-  // });
+  const file = await prisma.file.findUnique({
+    where: { id: fileId }
+  });
 
-  // const response = await fetch(file.url);
-  // const buffer = await response.arrayBuffer();
+  await cloudinary.uploader.destroy(file.publicId, {
+    resource_type: "image"
+  });
 
-  // res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
-  // res.setHeader("Content-Type", file.mimeType);
-  // res.send(Buffer.from(buffer));
+  await prisma.file.delete({
+    where: { id: fileId }
+  });
+
+  res.json({ ok: true });
 };
 
 module.exports = {

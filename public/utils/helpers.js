@@ -26,8 +26,3 @@ export const getValidUrl = (url) => {
   return `/${url.split("/").slice(1).join("/")}`;
 };
 
-export function getFolderId(folderIds) {
-  const folderId = Array.isArray(folderIds) ? folderIds[0] : folderIds;
-
-  return folderId === "null" ? null : folderId;
-}

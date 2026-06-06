@@ -52,7 +52,8 @@ model File {
   id        String   @id @default(cuid())
   name      String
   url       String // cloudinary URL or local path
-  mimetype  String // e.g "image/png", "application/pdf"
+  publicId  String
+  mimetype  String // 
   size      Int // in bytes
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
