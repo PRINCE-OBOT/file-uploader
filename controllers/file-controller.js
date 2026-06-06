@@ -34,7 +34,7 @@ const postController = [
 
     req.files.forEach((file) => {
       const limits = {
-        image: 1024 * 1,
+        image: 1024 * 1024 * 1,
         video: 1024 * 1024 * 50
       };
 

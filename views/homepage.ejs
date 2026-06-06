@@ -767,11 +767,12 @@
         const obj = JSON.parse(res);
 
         if (obj.ok) {
+          invalidFilesError.textContent = ''
           renderFoldersAndFiles();
         } else {
           const invalidFiles = obj.invalidFiles.map(
             (file) =>
-              `(file name:${file.originalname}, size: ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
+              `(file name: ${file.originalname}, size: ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
           );
           invalidFilesError.textContent = `${obj.message}, ${invalidFiles.join(", ")}`;
           invalidFilesError.classList.remove("hide");
