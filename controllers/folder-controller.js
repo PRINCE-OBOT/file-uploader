@@ -18,7 +18,7 @@ const postController = async (req, res) => {
 
 const getAllController = async (req, res) => {
   const folders = await prisma.folder.findMany({
-    where: { parentId: null }
+    where: { parentId: null, userId: req.user.id }
   });
 
   return res.json(folders);
