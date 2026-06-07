@@ -561,10 +561,12 @@ main {
 .file_preview_wrap {
   padding: 60px 0;
   flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .file_preview {
-  width: min(99%, 1000px);
+  width: min(99%, 400px);
   border-radius: 10px;
   box-shadow: var(--bx-shadow);
 }

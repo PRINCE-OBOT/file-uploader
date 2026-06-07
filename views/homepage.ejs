@@ -1179,7 +1179,7 @@
 
     delete: () => {
       fileDisplayWrapContent.append(
-        getSpinnerIcon(spinnerIconTemplate, "renameFile")
+        getSpinnerIcon(spinnerIconTemplate, "deleteFile")
       );
 
       const fileId = fileDisplayWrapContent.getAttribute("data-file-id");
@@ -1189,7 +1189,7 @@
       })
         .then((res) => res.text())
         .then((res) => {
-          removeSpinnerIcon(fileDisplayWrapContent, "renameFile");
+          removeSpinnerIcon(fileDisplayWrapContent, "deleteFile");
 
           if (!JSON.parse(res).ok) return;
 
