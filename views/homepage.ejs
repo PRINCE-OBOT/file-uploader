@@ -549,6 +549,37 @@
   </main>
 </section>
 
+<template class="spinner_icon_template">
+  <svg
+    width="48"
+    height="48"
+    viewBox="0 0 50 50"
+    xmlns="http://www.w3.org/2000/svg"
+    class="spinner_icon"
+  >
+    <circle
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      stroke="var(--pri-accent)"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-dasharray="90 60"
+      class="circle"
+    >
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 25 25"
+        to="360 25 25"
+        dur="500ms"
+        repeatCount="indefinite"
+      />
+    </circle>
+  </svg>
+</template>
+
 <dialog class="file_dialog">
   <form action="" class="file_form">
     <button type="button" class="close_file_dialog act">X</button>
@@ -613,7 +644,13 @@
 </dialog>
 
 <script type="module">
-  import { fetchGet, fetchPost, getValidUrl } from "/utils/helpers.js";
+  import {
+    fetchGet,
+    fetchPost,
+    getValidUrl,
+    getSpinnerIcon,
+    removeSpinnerIcon
+  } from "/utils/helpers.js";
 
   const main = document.querySelector("main");
 
@@ -641,6 +678,8 @@
   const fileDownload = fileDisplayWrapContent.querySelector(
     ".download_icon_wrap"
   );
+
+  const spinnerIconTemplate = document.querySelector(".spinner_icon_template");
 
   // file data
   const fileName = fileDisplayWrapContent.querySelector(".file_name");
@@ -678,6 +717,8 @@
       input.remove();
       return;
     }
+
+    rootFolderAndFileWrap.append(getSpinnerIcon(spinnerIconTemplate));
 
     const params = new URLSearchParams();
     params.append("name", folderName);
@@ -736,6 +777,8 @@
   }
 
   function handleUploadFile() {
+    modifyFolderDialog.close();
+
     const inputs = fileList.querySelectorAll("input");
 
     const formData = new FormData();
@@ -758,6 +801,10 @@
 
     fileDialog.close();
 
+    rootFolderAndFileWrap.append(
+      getSpinnerIcon(spinnerIconTemplate, "uploadFile")
+    );
+
     fetch("/file", {
       method: "POST",
       body: formData
@@ -766,15 +813,20 @@
       .then((res) => {
         const obj = JSON.parse(res);
 
+        removeSpinnerIcon(rootFolderAndFileWrap, 'uploadFile')
+
         if (obj.ok) {
           invalidFilesError.classList.add("hide");
+
           renderFoldersAndFiles();
         } else {
           const invalidFiles = obj.invalidFiles.map(
             (file) =>
               `(file name: ${file.originalname}, size: ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
           );
+
           invalidFilesError.textContent = `${obj.message}, ${invalidFiles.join(", ")}`;
+
           invalidFilesError.classList.remove("hide");
         }
 
@@ -849,7 +901,9 @@
     appendFiles(subFiles, subFolderAndFileWrap);
   }
 
-  async function displayFolder(e, folderWrap) {
+  async function displaySubFoldersAndFiles(e, folderWrap) {
+    rootFolderAndFileWrap.append(getSpinnerIcon(spinnerIconTemplate));
+
     const folderId = folderWrap.getAttribute("data-folder-id");
     const subFolderAndFileWrap = folderWrap.querySelector(
       ".sub_folder_and_file_wrap"
@@ -864,9 +918,15 @@
 
     appendFolders(subFolders, subFolderAndFileWrap);
     displayFile(subFiles, subFolderAndFileWrap);
+
+    removeSpinnerIcon(rootFolderAndFileWrap);
   }
 
   async function displayFileData(fileWrap) {
+    fileDisplayWrapContent.append(
+      getSpinnerIcon(spinnerIconTemplate, "fileData")
+    );
+
     const fileId = fileWrap.getAttribute("data-file-id");
 
     const file = await fetchGet(`/file/${fileId}`);
@@ -886,13 +946,15 @@
     displayFileMimetype.textContent = file.mimetype;
     displayFileCreatedAt.textContent = file.createdAt;
     displayFileUpdatedAt.textContent = file.updatedAt;
+
+    removeSpinnerIcon(fileDisplayWrapContent, "fileData");
   }
 
   function handleFolderAndFileOpen(e) {
     const folderWrap = e.target.closest("[data-folder-id]");
 
     if (folderWrap && !folderWrap.open) {
-      displayFolder(e, folderWrap);
+      displaySubFoldersAndFiles(e, folderWrap);
     } else {
       const fileWrap = e.target.closest("[data-file-id]");
 
@@ -1033,6 +1095,8 @@
       return;
     }
 
+    rootFolderAndFileWrap.append(getSpinnerIcon(spinnerIconTemplate));
+
     const params = new URLSearchParams();
 
     params.append("parentId", parentId);
@@ -1045,6 +1109,8 @@
     const action = e.target.dataset.modifyFolderAction;
 
     if (!action || !lastClickFolder) return;
+
+    if (typeof action !== "function") return;
 
     modifyFolderAction[action]();
   }

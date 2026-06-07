@@ -26,3 +26,15 @@ export const getValidUrl = (url) => {
   return `/${url.split("/").slice(1).join("/")}`;
 };
 
+export const getSpinnerIcon = (spinnerTemplate, attr = "subFoldersAndFiles") => {
+  const icon = spinnerTemplate.content
+    .cloneNode(true)
+    .querySelector(".spinner_icon");
+  icon.setAttribute("data-spinner-icon", attr);
+  return icon;
+};
+
+export const removeSpinnerIcon = (wrap, attr = "subFoldersAndFiles") => {
+  const icon = wrap.querySelector(`[data-spinner-icon='${attr}']`);
+  if (icon) icon.remove();
+};
