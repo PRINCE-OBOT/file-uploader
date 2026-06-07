@@ -630,7 +630,7 @@
           minute(s)
         </label>
       </div>
-      Share Link
+      Share Folder Link
     </button>
 
     <button
@@ -1052,6 +1052,10 @@
     },
 
     "share-link": async () => {
+      rootFolderAndFileWrap.append(
+        getSpinnerIcon(spinnerIconTemplate, "shareFolder")
+      );
+
       const params = new URLSearchParams();
 
       const expiresAt =
@@ -1067,6 +1071,8 @@
             navigator.clipboard.writeText(
               `${location.host}/share/${getLastClickFolderId()}`
             );
+
+            removeSpinnerIcon(rootFolderAndFileWrap, "shareFolder");
           } catch (err) {
             console.error("Failed to copy", err);
           }
@@ -1075,6 +1081,10 @@
       );
     },
     delete: () => {
+      rootFolderAndFileWrap.append(
+        getSpinnerIcon(spinnerIconTemplate, "deleteFolder")
+      );
+
       const folderId = getLastClickFolderId();
 
       fetch(`/folder/${folderId}`, {
@@ -1082,6 +1092,8 @@
       })
         .then((res) => res.text())
         .then((res) => {
+          removeSpinnerIcon(rootFolderAndFileWrap, "deleteFolder");
+
           if (!JSON.parse(res).ok) return;
 
           console.log("Folder Deleted Successfully");
