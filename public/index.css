@@ -566,7 +566,7 @@ main {
 }
 
 .file_preview {
-  width: min(99%, 400px);
+  width: min(99%, 700px);
   border-radius: 10px;
   box-shadow: var(--bx-shadow);
 }
