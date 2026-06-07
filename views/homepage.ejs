@@ -813,7 +813,7 @@
       .then((res) => {
         const obj = JSON.parse(res);
 
-        removeSpinnerIcon(rootFolderAndFileWrap, 'uploadFile')
+        removeSpinnerIcon(rootFolderAndFileWrap, "uploadFile");
 
         if (obj.ok) {
           invalidFilesError.classList.add("hide");
@@ -1132,6 +1132,10 @@
   }
 
   function handleRenameFileName() {
+    fileDisplayWrapContent.append(
+      getSpinnerIcon(spinnerIconTemplate, "renameFile")
+    );
+
     const fileId = fileDisplayWrapContent.getAttribute("data-file-id");
 
     const newName = inpFileName.value;
@@ -1148,8 +1152,11 @@
     })
       .then((res) => res.text())
       .then((res) => {
+        removeSpinnerIcon(fileDisplayWrapContent, "renameFile");
+
         if (!JSON.parse(res).ok) return;
         fileName.textContent = newName;
+
         renderFoldersAndFiles();
       })
       .catch((err) => {
@@ -1171,6 +1178,10 @@
     },
 
     delete: () => {
+      fileDisplayWrapContent.append(
+        getSpinnerIcon(spinnerIconTemplate, "renameFile")
+      );
+
       const fileId = fileDisplayWrapContent.getAttribute("data-file-id");
 
       fetch(`/file/${fileId}`, {
@@ -1178,11 +1189,16 @@
       })
         .then((res) => res.text())
         .then((res) => {
+          removeSpinnerIcon(fileDisplayWrapContent, "renameFile");
+
           if (!JSON.parse(res).ok) return;
 
           fileDisplayWrapContent.classList.add("hide");
+
           fileEmpty.classList.remove("hide");
+
           console.log("File Deleted Successfully");
+
           renderFoldersAndFiles();
         })
         .catch((err) => {
