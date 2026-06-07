@@ -609,6 +609,9 @@ main {
 }
 
 /* side bar */
+.open_side_bar_btn {
+  z-index: 2;
+}
 
 .open_side_bar_btn,
 .close_side_bar_btn {
@@ -623,7 +626,7 @@ main {
     display: none;
     transition: allow-discrete 300ms ease-in;
     transform: translateX(-100%);
-    z-index: 2;
+    z-index: 3;
   }
 
   .open_side_bar_btn,
