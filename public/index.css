@@ -567,6 +567,8 @@ main {
 
 .file_preview {
   width: min(99%, 700px);
+  object-fit: cover;
+  max-height: 400px;
   border-radius: 10px;
   box-shadow: var(--bx-shadow);
 }
